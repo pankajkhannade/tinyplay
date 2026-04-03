@@ -1,9 +1,11 @@
-const CACHE = 'tinyplay-v1';
-const FILES = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'tinyplay-v3'; // version bumped - forces refresh
+const FILES = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(FILES))
+    caches.open(CACHE).then(cache => cache.addAll(FILES)).catch(err => {
+      console.error('SW install failed:', err);
+    })
   );
   self.skipWaiting();
 });
@@ -19,6 +21,11 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+    caches.match(e.request).then(r => r || fetch(e.request)).catch(() => fetch(e.request))
   );
+});
+
+// Force update check every load
+self.addEventListener('message', (e) => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
 });

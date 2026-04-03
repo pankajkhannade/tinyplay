@@ -401,7 +401,18 @@ function goHome(){showScreen('home');incrementSession()}
 // === COLOR POP ===
 const COLORS=[{n:'RED',h:'#FF4444'},{n:'BLUE',h:'#4488FF'},{n:'GREEN',h:'#44BB44'},{n:'YELLOW',h:'#FFDD00'},{n:'PINK',h:'#FF69B4'},{n:'ORANGE',h:'#FF8800'}];
 let cs=0,cr=0,cl=1,tc=null,hint=0;
-function startGame(id){cr=0;cs=0;cl=1;hint=0;document.getElementById('c-score').textContent='0';document.getElementById('c-lvl').textContent='1';showScreen(id);nextRound()}
+function startGame(id){
+  cr=0;cs=0;cl=1;hint=0;
+  document.getElementById('c-score').textContent='0';
+  document.getElementById('c-lvl').textContent='1';
+  showScreen(id);
+  if(id==='colorpop')nextCRound();
+  else if(id==='animals')nextARound();
+  else if(id==='counting')nextCntRound();
+  else if(id==='shapes')nextSRound();
+  else if(id==='memory')nextMRound();
+  else if(id==='balloonpop')startBalloons();
+}
 function nextCRound(){
   document.getElementById('winOverlay').classList.remove('show');
   cr++;if(cr>8&&cl>=3){winAll('colorpop');return}
@@ -704,7 +715,7 @@ const tap=()=>soundOn&&tone(400,0.05,0.2);
 // === INIT ===
 document.addEventListener('DOMContentLoaded',()=>{
   load();updateStats();updateToggleUI();renderTrophies();
-  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=3').catch(()=>{});
   document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden)stopBalloons();
