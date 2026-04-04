@@ -12,12 +12,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-height:100vh;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.screen{display:none;width:100vw;height:100vh;position:fixed;top:0;left:0}
+.screen{display:none;width:100vw;min-height:100vh;position:fixed;top:0;left:0}
 .screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
 .screen.fscroll{overflow-y:auto;justify-content:flex-start;padding-top:20px}
-
-/* HOME */
-#home{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00,#00D4AA,#6B5BFF);background-size:400% 400%;animation:gradShift 8s ease infinite}
+#home{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00,#00D4AA,#6B5BFF);background-size:400% 400%;animation:gradShift 8s ease infinite;min-height:100vh;height:auto;overflow-y:scroll;-webkit-overflow-scrolling:touch}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .mascot{font-size:5rem;animation:bounce 2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
 @keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
