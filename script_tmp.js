@@ -1,417 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#FF6B6B">
-<title>TinyPlay — Fun Games for Kids</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-height:100vh;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.screen{display:none;width:100vw;height:100vh;position:fixed;top:0;left:0}
-.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
-.screen.fscroll{overflow-y:auto;justify-content:flex-start;padding-top:20px}
 
-/* HOME */
-#home{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00,#00D4AA,#6B5BFF);background-size:400% 400%;animation:gradShift 8s ease infinite}
-@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.mascot{font-size:5rem;animation:bounce 2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
-@keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
-.mascot:active{animation:wiggle 0.3s ease}
-@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
-.home-title{font-size:2.8rem;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.15);letter-spacing:1px;margin:8px 0}
-.home-sub{color:rgba(255,255,255,0.9);font-size:1rem;margin-bottom:12px;text-shadow:1px 1px 0 rgba(0,0,0,0.1)}
-.star-count{background:rgba(255,255,255,0.2);border-radius:30px;padding:6px 18px;color:#FFEE00;font-size:1rem;font-weight:bold;backdrop-filter:blur(5px);margin-bottom:10px}
-.game-grid{display:flex;flex-wrap:wrap;justify-content:center;max-width:380px;gap:10px;padding:8px}
-.game-btn{width:165px;height:150px;border-radius:24px;border:5px solid white;cursor:pointer;color:white;text-shadow:2px 2px 0 rgba(0,0,0,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 6px 0 rgba(0,0,0,0.12);transition:transform 0.1s;position:relative;overflow:hidden;font-family:inherit}
-.game-btn:active{transform:scale(0.94) translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,0.12)}
-.game-btn .icon{font-size:2.8rem}.game-btn .lbl{font-weight:800;font-size:0.9rem;text-align:center;padding:0 6px}.game-btn .age{font-size:0.7rem;opacity:0.8}
-#btn-colors{background:linear-gradient(135deg,#FF4444,#FF8800,#FFDD00)}
-#btn-balloons{background:linear-gradient(135deg,#FF1493,#FF6347,#FFD700)}
-#btn-animals{background:linear-gradient(135deg,#9C27B0,#E91E63,#FF5722)}
-#btn-counting{background:linear-gradient(135deg,#2196F3,#00BCD4,#4CAF50)}
-#btn-shapes{background:linear-gradient(135deg,#795548,#A1887F,#D7CCC8)}
-#btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
-#btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
-
-.bottom-nav{display:flex;gap:8px;margin-top:14px;padding:8px;background:rgba(255,255,255,0.15);border-radius:30px;backdrop-filter:blur(5px)}
-.nav-btn{background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:44px;height:44px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.1s;color:white}
-.nav-btn:active{transform:scale(0.9)}.nav-btn.active{background:rgba(255,255,255,0.35)}
-
-.back-btn{position:absolute;top:12px;left:12px;font-size:1rem;background:rgba(255,255,255,0.25);color:white;border:none;border-radius:50%;width:46px;height:46px;cursor:pointer;backdrop-filter:blur(5px);z-index:10;display:flex;align-items:center;justify-content:center}
-.score-display{position:absolute;top:14px;right:16px;font-size:1.2rem;color:#FFEE00;text-shadow:2px 2px 0 rgba(0,0,0,0.25);z-index:10}
-
-/* COLOR LEARN */
-#colorlearn{background:#1a1a2e}
-.color-big-btn{width:220px;height:220px;border-radius:40px;border:8px solid white;cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;animation:popIn 0.4s ease}
-@keyframes popIn{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-.color-big-btn:active{transform:scale(0.92) translateY(4px)}
-.color-big-btn .cname{font-size:2.4rem;font-weight:bold;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.3)}
-.color-big-btn .cobj{font-size:3.5rem}
-.color-big-btn .chindi{font-size:1rem;color:rgba(255,255,255,0.8);margin-top:2px}
-.color-hint{font-size:1.1rem;color:rgba(255,255,255,0.6);margin-top:14px;text-align:center;min-height:28px;padding:0 20px}
-.progress-bar{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
-.pdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3);transition:background 0.3s}
-.pdot.done{background:#FFEE00}
-.pdot.current{background:#FF6B6B;animation:pulse 1s ease infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
-.learn-mode-label{position:absolute;top:14px;left:68px;background:rgba(255,255,255,0.15);color:white;padding:4px 14px;border-radius:20px;font-size:0.85rem;backdrop-filter:blur(5px)}
-.celebration-area{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
-.celeb-emoji{position:absolute;font-size:3rem;animation:celebFloat 1.5s ease-out forwards}
-@keyframes celebFloat{0%{transform:translateY(0) scale(0);opacity:1}30%{transform:translateY(-50px) scale(1.5);opacity:1}100%{transform:translateY(-150px) scale(0.5);opacity:0}}
-
-/* BALLOON */
-#balloonpop{background:linear-gradient(to top,#a8e6cf,#dcedc1 40%,#ffd3a5 70%,#fdffab);overflow:hidden}
-.balloon{position:absolute;bottom:-140px;cursor:pointer;animation:floatUp linear forwards;border-radius:50% 50% 50% 50%/55% 55% 45% 45%;box-shadow:inset -8px -8px 20px rgba(0,0,0,0.12),inset 8px 8px 20px rgba(255,255,255,0.2)}
-@keyframes floatUp{0%{transform:translateY(0) rotate(-4deg)}100%{transform:translateY(-115vh) rotate(4deg)}}
-
-/* ANIMALS */
-#animals{background:linear-gradient(to bottom,#87CEEB,#98FB98)}
-.amode-bar{position:absolute;top:14px;left:68px;background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:20px;font-size:0.85rem;backdrop-filter:blur(5px)}
-.a-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:90vw;max-width:380px}
-.abtn{aspect-ratio:1.2;border-radius:20px;border:5px solid white;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,0.92);box-shadow:0 5px 0 rgba(0,0,0,0.12);transition:transform 0.08s;position:relative}
-.abtn:active{transform:scale(0.9) translateY(3px)}
-.abtn .aemoji{font-size:2.8rem;line-height:1}
-.abtn .aname{font-size:0.75rem;color:#333;font-weight:bold;position:absolute;bottom:4px}
-.an-btn{position:absolute;top:14px;right:16px;background:rgba(255,255,255,0.2);color:white;border:none;border-radius:50%;width:44px;height:44px;font-size:1rem;cursor:pointer;backdrop-filter:blur(5px);z-index:10;display:flex;align-items:center;justify-content:center}
-.round-info-center{font-size:1.1rem;color:rgba(255,255,255,0.6);margin-top:10px;text-align:center}
-.instr{font-size:1.5rem;color:white;margin:10px 0;text-align:center;min-height:36px;display:flex;align-items:center;justify-content:center}
-
-/* COUNTING */
-#counting{background:linear-gradient(to bottom,#FFF3E0,#FFE0B2)}
-.cnt-obj{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:360px}
-.cnt-item{font-size:2.4rem;animation:popIn 0.3s ease}
-.ngrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:90vw;max-width:360px}
-.nbtn{height:62px;border-radius:14px;border:4px solid white;font-size:1.6rem;font-weight:bold;color:white;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.15);transition:transform 0.08s;font-family:inherit}
-.nbtn:active{transform:scale(0.88) translateY(3px)}
-
-/* SHAPES */
-#shapes{background:linear-gradient(to bottom,#E8EAF6,#C5CAE9)}
-.shgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:90vw;max-width:360px}
-.shbtn{aspect-ratio:1;border-radius:16px;border:4px solid white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:3rem;background:rgba(255,255,255,0.9);box-shadow:0 4px 0 rgba(0,0,0,0.12);transition:transform 0.08s}
-.shbtn:active{transform:scale(0.9) translateY(3px)}
-
-/* MEMORY */
-#memory{background:linear-gradient(to bottom,#F3E5F5,#E1BEE7)}
-.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:90vw;max-width:360px}
-.mcard{aspect-ratio:0.8;border-radius:14px;border:4px solid white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:linear-gradient(135deg,#CE93D8,#AB47BC);box-shadow:0 4px 0 rgba(0,0,0,0.15);transition:transform 0.15s;position:relative;overflow:hidden}
-.mcard.flipped{background:white;transform:scale(0.95)}
-.mcard.matched{background:linear-gradient(135deg,#A5D6A7,#66BB6A);transform:scale(0.95);box-shadow:0 2px 0 rgba(0,0,0,0.1)}
-.mcard:active{transform:scale(0.92)}
-
-/* CHALISA HOMEPAGE */
-#chalisa-home{background:linear-gradient(to bottom,#FFF8E1,#FFE082)}
-.chalisa-title{font-size:2.4rem;color:#E65100;text-shadow:2px 2px 0 rgba(0,0,0,0.1);margin:10px 0;text-align:center}
-.chalisa-sub{font-size:1rem;color:#795548;margin-bottom:14px;text-align:center;padding:0 20px}
-.chalisa-stats{display:flex;gap:14px;margin-bottom:14px}
-.ch-stat{background:rgba(255,255,255,0.7);border-radius:16px;padding:10px 18px;text-align:center;backdrop-filter:blur(5px)}
-.ch-stat .num{font-size:2rem;font-weight:bold;color:#E65100}
-.ch-stat .lbl{font-size:0.75rem;color:#795548;margin-top:2px}
-.chalisa-modes{display:flex;flex-direction:column;gap:10px;width:90vw;max-width:360px}
-.ch-mode-btn{background:linear-gradient(135deg,#FF8F00,#E65100);color:white;border:none;border-radius:20px;padding:14px 20px;font-size:1.1rem;font-weight:bold;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.15);transition:transform 0.1s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px}
-.ch-mode-btn:active{transform:scale(0.96) translateY(2px)}
-.ch-mode-btn.green{background:linear-gradient(135deg,#2E7D32,#1B5E20)}
-.ch-mode-btn.blue{background:linear-gradient(135deg,#1565C0,#0D47A1)}
-
-/* CHALISA SELECT */
-#chalisa-select{background:linear-gradient(to bottom,#FFF8E1,#FFE082)}
-.garland-wrap{width:90vw;max-width:400px;overflow-y:auto;flex:1;margin-top:60px;padding:10px 0}
-.garland-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px}
-.verse-node{width:44px;height:44px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:bold;color:white;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,0.15);transition:transform 0.1s;position:relative;background:#9E9E9E}
-.verse-node:active{transform:scale(0.9)}
-.verse-node.mastered{background:#4CAF50}
-.verse-node.current{border-color:#FFEE00;transform:scale(1.15);z-index:2}
-
-/* CHALISA LEARN */
-#chalisa-learn{background:#1a1a2e}
-.verse-num-badge{position:absolute;top:14px;left:68px;background:rgba(255,255,255,0.15);color:white;padding:4px 12px;border-radius:20px;font-size:0.85rem;backdrop-filter:blur(5px)}
-.verse-type-badge{position:absolute;top:14px;right:70px;background:rgba(255,193,7,0.9);color:#333;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:bold;backdrop-filter:blur(5px)}
-.verse-display{width:92vw;max-width:420px;background:rgba(255,255,255,0.08);border-radius:24px;padding:20px 16px;margin:10px 0;text-align:center;backdrop-filter:blur(5px);max-height:50vh;overflow-y:auto}
-.verse-hindi{font-size:1.55rem;line-height:2.3;color:white;font-weight:bold;margin-bottom:14px;font-family:'Noto Sans Devanagari','Mangal',serif;text-align:center}
-.verse-latin{font-size:0.9rem;color:#FFD54F;margin-bottom:10px;font-style:italic;text-align:center}
-.verse-meaning{font-size:0.82rem;color:rgba(255,255,255,0.7);text-align:center;line-height:1.65;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1)}
-.verse-audio-btn{background:#FF6F00;color:white;border:none;border-radius:50%;width:64px;height:64px;font-size:1.8rem;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.3);transition:transform 0.1s;display:flex;align-items:center;justify-content:center;margin:10px auto}
-.verse-audio-btn:active{transform:scale(0.92)}
-.verse-audio-btn.playing{background:#4CAF50;animation:audioPulse 1s ease infinite}
-@keyframes audioPulse{0%,100%{box-shadow:0 4px 0 rgba(0,0,0,0.3)}50%{box-shadow:0 4px 0 rgba(0,0,0,0.3),0 0 0 10px rgba(76,175,80,0.4)}}
-.verse-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.verse-btn{background:rgba(255,255,255,0.15);color:white;border:none;border-radius:16px;padding:10px 20px;font-size:1rem;cursor:pointer;backdrop-filter:blur(5px);font-family:inherit;transition:transform 0.1s}
-.verse-btn:active{transform:scale(0.94)}
-.verse-btn.primary{background:#4CAF50;font-weight:bold}
-.verse-btn.danger{background:#FF5252}
-.learn-progress{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:0.85rem;color:rgba(255,255,255,0.6);text-align:center}
-
-/* CHALISA FULL */
-#chalisa-full{background:linear-gradient(to bottom,#1a1a2e,#2d1b4e)}
-.full-title{font-size:1.8rem;color:white;text-align:center;margin:10px 0}
-.full-verse-box{width:92vw;max-width:420px;background:rgba(255,255,255,0.08);border-radius:20px;padding:16px;margin:8px 0;text-align:center;backdrop-filter:blur(5px)}
-.full-verse-hindi{font-size:1.35rem;line-height:2.1;color:white;margin-bottom:10px;font-family:'Noto Sans Devanagari',serif}
-.full-verse-latin{font-size:0.8rem;color:#FFD54F;font-style:italic;margin-bottom:8px}
-.full-verse-meaning{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5}
-.full-progress-bar{position:absolute;bottom:14px;left:14px;right:14px;height:6px;background:rgba(255,255,255,0.2);border-radius:3px;overflow:hidden}
-.full-progress-fill{height:100%;background:linear-gradient(to right,#FF8F00,#FFEE00);transition:width 0.5s ease;border-radius:3px}
-
-/* TROPHY */
-#trophies{background:linear-gradient(to bottom,#FFFDE7,#FFF9C4)}
-.trophy-title{font-size:2rem;color:#F57F17;text-shadow:2px 2px 0 rgba(0,0,0,0.1);margin:10px 0}
-.trophy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px;width:90vw;max-width:400px}
-.trophy-card{background:white;border-radius:20px;padding:14px;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,0.1)}
-.trophy-card.earned{background:#FFFDE7;border:3px solid #FFEE00}
-.trophy-card .ticon{font-size:2.5rem}.trophy-card .tname{font-size:0.8rem;color:#555;margin-top:4px;font-weight:bold}
-.trophy-card.locked{opacity:0.35;filter:grayscale(1)}
-
-/* PARENT */
-#parent{background:linear-gradient(to bottom,#ECEFF1,#CFD8DC)}
-.parent-title{font-size:2rem;color:#37474F;margin:10px 0}
-.parent-card{background:white;border-radius:20px;padding:16px;width:90vw;max-width:360px;box-shadow:0 4px 0 rgba(0,0,0,0.1);margin:8px 0}
-.parent-card h3{color:#37474F;font-size:1rem;margin-bottom:8px}
-.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee}
-.toggle-row:last-child{border:none}
-.toggle{width:50px;height:28px;background:#ccc;border-radius:14px;position:relative;cursor:pointer;transition:background 0.2s}
-.toggle.on{background:#4CAF50}
-.toggle::after{content:'';position:absolute;width:22px;height:22px;background:white;border-radius:50%;top:3px;left:3px;transition:left 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
-.toggle.on::after{left:25px}
-.stat-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.9rem;color:#555}
-.reset-btn{background:#FF5252;color:white;border:none;border-radius:14px;padding:10px 24px;font-size:1rem;cursor:pointer;font-family:inherit;margin-top:8px;box-shadow:0 3px 0 rgba(0,0,0,0.15)}
-
-/* OVERLAYS */
-.overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(8px)}
-.overlay.show{display:flex}
-.overlay-title{font-size:2.5rem;color:white;text-align:center;text-shadow:3px 3px 0 rgba(0,0,0,0.2);animation:winPulse 0.7s ease-in-out infinite alternate}
-@keyframes winPulse{0%{transform:scale(1)}100%{transform:scale(1.08)}}
-.overlay-sub{font-size:1.3rem;color:#FFEE00;margin-top:8px;text-align:center}
-.overlay-btn{margin-top:20px;padding:14px 36px;font-size:1.2rem;background:#FF6B6B;color:white;border:none;border-radius:30px;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,0.2);transition:transform 0.1s}
-.overlay-btn:active{transform:scale(0.95)}
-.stars-big{font-size:3rem;margin:10px 0;animation:starSpin 0.8s ease}
-@keyframes starSpin{0%{transform:scale(0) rotate(-180deg)}60%{transform:scale(1.3) rotate(10deg)}100%{transform:scale(1) rotate(0deg)}}
-.trophy-big{font-size:4rem;animation:trophyBounce 0.8s ease}
-@keyframes trophyBounce{0%{transform:scale(0) translateY(50px)}60%{transform:scale(1.2) translateY(-10px)}100%{transform:scale(1) translateY(0)}}
-
-/* EFFECTS */
-.confetti{position:fixed;width:12px;height:12px;border-radius:3px;pointer-events:none;animation:confettiFall 1.5s ease-out forwards;z-index:99}
-@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-.pop-score{position:fixed;font-size:1.8rem;font-weight:bold;color:#FFD700;text-shadow:2px 2px 0 rgba(0,0,0,0.3);pointer-events:none;animation:scoreFloat 1s ease-out forwards;z-index:101}
-@keyframes scoreFloat{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-70px) scale(1.3);opacity:0}}
-.star{position:fixed;font-size:2rem;pointer-events:none;animation:starFly 1s ease-out forwards;z-index:100}
-@keyframes starFly{0%{transform:scale(0);opacity:1}40%{transform:scale(1.5);opacity:1}100%{transform:scale(0.5) translateY(-80px);opacity:0}}
-.popup-msg{position:fixed;font-size:1.3rem;color:white;background:rgba(0,0,0,0.6);padding:8px 18px;border-radius:20px;pointer-events:none;animation:msgFade 1.5s ease-out forwards;z-index:102;text-align:center;max-width:280px;left:50%;transform:translateX(-50%)}
-@keyframes msgFade{0%{transform:translateX(-50%) translateY(0);opacity:1}80%{transform:translateX(-50%) translateY(-30px);opacity:1}100%{transform:translateX(-50%) translateY(-40px);opacity:0}}
-</style>
-</head>
-<body>
-
-<div id="home" class="screen active">
-  <div class="mascot" id="mascot" onclick="mascotReact()">🎈</div>
-  <h1 class="home-title">TinyPlay</h1>
-  <p class="home-sub">Fun games & Hanuman Chalisa! 🙏</p>
-  <div class="star-count" id="totalStarsHome">⭐ 0 stars</div>
-  <div class="game-grid">
-    <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">🎨</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
-    <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">🐮</span><span class="lbl">Animals</span><span class="age">2+</span></button>
-    <button class="game-btn" id="btn-balloons" onclick="showScreen('balloonpop');startBalloons()"><span class="icon">🎈</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
-    <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
-    <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">⭐</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
-    <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
-    <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
-  </div>
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="showScreen('home')">🏠</button>
-    <button class="nav-btn" onclick="showScreen('trophies')">🏆</button>
-    <button class="nav-btn" onclick="showScreen('parent')">⚙️</button>
-  </div>
-</div>
-
-<!-- COLOR LEARN -->
-<div id="colorlearn" class="screen">
-  <button class="back-btn" onclick="goHome()">🏠</button>
-  <div class="score-display">⭐ <span id="cl-score">0</span></div>
-  <div class="learn-mode-label">Learning Colors</div>
-  <div class="celebration-area" id="celebArea"></div>
-  <div class="color-big-btn" id="clCard" onclick="clTap()">
-    <div class="cobj" id="cl-obj">🍎</div>
-    <div class="cname" id="cl-name">RED</div>
-    <div class="chindi" id="cl-hindi">लाल</div>
-  </div>
-  <div class="color-hint" id="cl-hint">Tap the card!</div>
-  <div class="round-info-center" id="cl-progress">Color 1 / 8</div>
-  <div class="progress-bar" id="cl-dots"></div>
-</div>
-
-<!-- ANIMALS -->
-<div id="animals" class="screen">
-  <button class="back-btn" onclick="goHome()">🏠</button>
-  <div class="score-display">⭐ <span id="a-score">0</span></div>
-  <div class="amode-bar" id="a-mode">🎵 Listen & Tap</div>
-  <div class="instr" id="a-instr">Tap 🐮!</div>
-  <div class="a-grid" id="a-grid"></div>
-  <div class="round-info-center" id="a-round">Round 1/10</div>
-</div>
-
-<!-- BALLOON -->
-<div id="balloonpop" class="screen">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="score-display">⭐ <span id="b-score">0</span></div>
-</div>
-
-<!-- COUNTING -->
-<div id="counting" class="screen">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="score-display">⭐ <span id="cnt-score">0</span></div>
-  <div class="instr" id="cnt-instr" style="color:#333;margin-top:50px">Count the 🍌!</div>
-  <div class="cnt-obj" id="cnt-obj"></div>
-  <div class="ngrid" id="n-grid"></div>
-  <div class="round-info-center" id="cnt-round"></div>
-</div>
-
-<!-- SHAPES -->
-<div id="shapes" class="screen">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="score-display">⭐ <span id="s-score">0</span></div>
-  <div class="instr" id="s-instr" style="color:#333;margin-top:50px">Tap the ⭕!</div>
-  <div class="shgrid" id="sh-grid"></div>
-  <div class="round-info-center" id="s-round"></div>
-</div>
-
-<!-- MEMORY -->
-<div id="memory" class="screen">
-  <button class="back-btn" onclick="goHome()">←</button>
-  <div class="score-display">⭐ <span id="m-score">0</span></div>
-  <div class="instr" style="color:#333;margin-top:50px">Find matching pairs!</div>
-  <div class="mgrid" id="m-grid"></div>
-  <div class="round-info-center" id="m-round"></div>
-</div>
-
-<!-- CHALISA HOME -->
-<div id="chalisa-home" class="screen">
-  <button class="back-btn" onclick="goHome()">🏠</button>
-  <div class="score-display">🏆 <span id="ch-total">0/23</span></div>
-  <h1 class="chalisa-title">🙏 हनुमान चालीसा 🙏</h1>
-  <p class="chalisa-sub">Learn all 23 verses of Hanuman Chalisa — verse by verse with your parent!</p>
-  <div class="chalisa-stats">
-    <div class="ch-stat"><div class="num" id="ch-learned">0</div><div class="lbl">Learned</div></div>
-    <div class="ch-stat"><div class="num" id="ch-streak">0</div><div class="lbl">Day Streak</div></div>
-    <div class="ch-stat"><div class="num" id="ch-days">0</div><div class="lbl">Days Done</div></div>
-  </div>
-  <div class="chalisa-modes">
-    <button class="ch-mode-btn green" onclick="showScreen('chalisa-select')">📿 Learn Verses — Pick a verse to learn</button>
-    <button class="ch-mode-btn" onclick="chStartFull()">🔁 Full Chalisa — Listen to all 23 verses</button>
-    <button class="ch-mode-btn blue" onclick="chStartRevision()">📖 Revision — Practice unlearned verses</button>
-  </div>
-</div>
-
-<!-- CHALISA SELECT -->
-<div id="chalisa-select" class="screen">
-  <button class="back-btn" onclick="showScreen('chalisa-home')">←</button>
-  <div style="position:absolute;top:14px;left:70px;right:70px;text-align:center;font-size:1.1rem;font-weight:bold;color:#E65100;z-index:5">📿 Choose a Verse</div>
-  <div class="garland-wrap" id="garland"></div>
-</div>
-
-<!-- CHALISA LEARN -->
-<div id="chalisa-learn" class="screen">
-  <button class="back-btn" onclick="chStop();showScreen('chalisa-select')">←</button>
-  <div class="score-display">⭐ <span id="ch-score">0</span></div>
-  <div class="verse-num-badge" id="ch-verse-num">Verse 1</div>
-  <div class="verse-type-badge" id="ch-verse-type">Doha</div>
-  <div class="verse-display">
-    <div class="verse-hindi" id="ch-hindi"></div>
-    <div class="verse-latin" id="ch-latin"></div>
-    <div class="verse-meaning" id="ch-meaning"></div>
-  </div>
-  <button class="verse-audio-btn" id="ch-play-btn" onclick="chPlayVerse()">▶</button>
-  <div class="verse-controls">
-    <button class="verse-btn" onclick="chRepeatVerse()">🔁 Repeat</button>
-    <button class="verse-btn primary" id="ch-master-btn" onclick="chMarkLearned()">✓ I Know This!</button>
-  </div>
-  <div class="learn-progress" id="ch-learn-progress">Tap play to hear the verse</div>
-</div>
-
-<!-- CHALISA FULL PLAYER -->
-<div id="chalisa-full" class="screen">
-  <button class="back-btn" onclick="chStopFull();showScreen('chalisa-home')">←</button>
-  <div class="full-title">🙏 हनुमान चालीसा 🙏</div>
-  <div class="full-verse-box">
-    <div class="full-verse-hindi" id="full-hindi"></div>
-    <div class="full-verse-latin" id="full-latin"></div>
-    <div class="full-verse-meaning" id="full-meaning"></div>
-  </div>
-  <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
-    <button class="verse-btn" onclick="chPrevVerse()">⏮ Prev</button>
-    <button class="verse-btn primary" id="full-play-btn" onclick="chPlayFullVerse()">▶ Play</button>
-    <button class="verse-btn" onclick="chNextVerse()">Next ⏭</button>
-  </div>
-  <div class="full-progress-bar"><div class="full-progress-fill" id="full-progress-fill" style="width:0%"></div></div>
-</div>
-
-<!-- TROPHY -->
-<div id="trophies" class="screen fscroll">
-  <h2 class="trophy-title">🏆 Trophy Room</h2>
-  <div id="totalStarsDisplay" style="font-size:1.5rem;color:#F57F17;font-weight:bold;margin-bottom:10px">⭐ 0 Total Stars</div>
-  <div class="trophy-grid" id="trophy-grid"></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('home')">🏠</button>
-    <button class="nav-btn" onclick="showScreen('trophies')">🏆</button>
-    <button class="nav-btn" onclick="showScreen('parent')">⚙️</button>
-  </div>
-</div>
-
-<!-- PARENT -->
-<div id="parent" class="screen fscroll">
-  <h2 class="parent-title">⚙️ Parent Corner</h2>
-  <div class="parent-card"><h3>🔊 Sound & Voice</h3>
-    <div class="toggle-row"><span>Sound effects</span><div class="toggle on" id="togSound" onclick="toggleSound()"></div></div>
-    <div class="toggle-row"><span>Voice instructions</span><div class="toggle on" id="togVoice" onclick="toggleVoice()"></div></div>
-    <div class="toggle-row"><span>Haptic vibration</span><div class="toggle on" id="togHaptic" onclick="toggleHaptic()"></div></div>
-  </div>
-  <div class="parent-card"><h3>📊 Progress</h3>
-    <div class="stat-row"><span>Colors mastered</span><span id="ps-colors">0/8</span></div>
-    <div class="stat-row"><span>Animals learned</span><span id="ps-animals">0/20</span></div>
-    <div class="stat-row"><span>Chalisa verses learned</span><span id="ps-chalisa">0/23</span></div>
-    <div class="stat-row"><span>Total stars</span><span id="ps-total">0</span></div>
-    <div class="stat-row"><span>Play sessions</span><span id="ps-sessions">0</span></div>
-  </div>
-  <div class="parent-card"><h3>🔄 Reset</h3><p style="font-size:0.85rem;color:#888;margin-bottom:8px">Reset all progress including Chalisa learning.</p><button class="reset-btn" onclick="resetProgress()">Reset All Progress</button></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showScreen('home')">🏠</button>
-    <button class="nav-btn" onclick="showScreen('trophies')">🏆</button>
-    <button class="nav-btn" onclick="showScreen('parent')">⚙️</button>
-  </div>
-</div>
-
-<!-- WIN OVERLAY -->
-<div class="overlay" id="winOverlay">
-  <div class="stars-big" id="winStars">⭐⭐⭐</div>
-  <div class="overlay-title" id="winTitle">🎉 Amazing! 🎉</div>
-  <div class="overlay-sub" id="winSub"></div>
-  <button class="overlay-btn" id="winBtn" onclick="winNext()">Next →</button>
-</div>
-
-<div class="overlay" id="trophyOverlay">
-  <div class="trophy-big" id="trophyIcon">🏆</div>
-  <div class="overlay-title" id="trophyTitle">New Trophy!</div>
-  <div class="overlay-sub" id="trophySub"></div>
-  <button class="overlay-btn" onclick="closeTrophy()">Yay! 🎉</button>
-</div>
-
-<script>
 // ============================================================
 // HANUMAN CHALISA — 23 Verse Entries (Authentic Tulsidas)
 // ============================================================
 const CHALISA = [
   // Mangalacharan
-  {v:0,type:'Mangalacharan',hindi:'श्री गुरु चरन सरोज रज, निज मुकुरु सुधारि।
-बरनउँ रघुबर बिमल जसु, जो दायकु फल चारि॥',latin:'Shri Guru Charan Saroj Raj, Nij Mukur Sudhar.
-Baran Raghuber Bimal Jasu, Jo Dayak Fal Char.',meaning:"Having polished the mirror of my mind with the dust of my Guru's lotus feet, I narrate the pure glory of Raghubeer (Shri Ram), which bestows the four fruits of life."},
-  {v:0,type:'Mangalacharan',hindi:'बुद्धिहीन तनु जानिके, सुमिरौ पवनसुत बल।
-बायसु निगुर भक्ति बढ़ाये, राम बल बुद्धि निकेता॥',latin:'Buddhiheen Tanu Janikay, Sumirau Pavansut Bal.
-Baayau Nigur Bhakti Bdhaye, Ram Bal Buddhi Niketaa.',meaning:'Knowing my body to be void of intelligence, I meditate on Hanuman, the son of Pavan. By his grace, may I gain devotion, Ram\'s strength and wisdom.'},
+  {v:0,type:'Mangalacharan',hindi:'श्री गुरु चरन सरोज रज, निज मुकुरु सुधारि।\nबरनउँ रघुबर बिमल जसु, जो दायकु फल चारि॥',latin:'Shri Guru Charan Saroj Raj, Nij Mukur Sudhar.\nBaran Raghuber Bimal Jasu, Jo Dayak Fal Char.',meaning:"Having polished the mirror of my mind with the dust of my Guru's lotus feet, I narrate the pure glory of Raghubeer (Shri Ram), which bestows the four fruits of life."},
+  {v:0,type:'Mangalacharan',hindi:'बुद्धिहीन तनु जानिके, सुमिरौ पवनसुत बल।\nबायसु निगुर भक्ति बढ़ाये, राम बल बुद्धि निकेता॥',latin:'Buddhiheen Tanu Janikay, Sumirau Pavansut Bal.\nBaayau Nigur Bhakti Bdhaye, Ram Bal Buddhi Niketaa.',meaning:'Knowing my body to be void of intelligence, I meditate on Hanuman, the son of Pavan. By his grace, may I gain devotion, Ram\'s strength and wisdom.'},
   // Doha 1
-  {v:1,type:'Doha',hindi:'जामहिं विललापि मागहिं तात चलेउ विपसेन।
-सीय राम जासु कृपाय सब सुख लहेउ तात सेन॥',latin:"Jaanhi Vilapi Maaghi Taat Chaleu Vipseen.
-Siya Ram Jaasu Kripaay Sab Sukh Laheu Taat Seen.",meaning:'(Shri Hanuman, being in service of Shri Ram and on hearing their lamentations, fled Lanka and arrived at the seashore.)'},
+  {v:1,type:'Doha',hindi:'जामहिं विललापि मागहिं तात चलेउ विपसेन।\nसीय राम जासु कृपाय सब सुख लहेउ तात सेन॥',latin:"Jaanhi Vilapi Maaghi Taat Chaleu Vipseen.\nSiya Ram Jaasu Kripaay Sab Sukh Laheu Taat Seen.",meaning:'(Shri Hanuman, being in service of Shri Ram and on hearing their lamentations, fled Lanka and arrived at the seashore.)'},
   // Chaupai 1-8
   {v:2,type:'Chaupai',hindi:'जय हनुमान ज्ञान गुन सागर, जय कपीस तिहुँ लोक उजागर॥',latin:'Jai Hanuman Gyaan Gun Saagar, Jai Kapis Tihun Lok Ujaagar.',meaning:'Victory to Hanuman, ocean of wisdom and virtues. Victory to the Lord of monkeys, illustrious in all three worlds.'},
   {v:3,type:'Chaupai',hindi:'राम दूत अतुलित बल धामा, अंजनि पुत्र पवनसुत नामा॥',latin:'Ram Doot Atulit Bal Dhaama, Anjani Putr Pavansut Naama.',meaning:'You are the messenger of Ram, the abode of immeasurable strength, the son of Anjani, known by the name Pavansut.'},
@@ -423,9 +19,7 @@ Siya Ram Jaasu Kripaay Sab Sukh Laheu Taat Seen.",meaning:'(Shri Hanuman, being 
   {v:9,type:'Chaupai',hindi:'राम राज्य बिजय मोहि पसारे। सब सुख लहेउ तनु धारि भारे॥',latin:'Ram Raajy Vijayi Mohi Pasaare. Sab Sukh Laheu Tanu Dhaari Bhaare.',meaning:'Shri Ram has given me victory and expanded my happiness. I have attained all joys by bearing the body of Shri Ram.'},
   {v:10,type:'Chaupai',hindi:'सहस बन जुग फलित एक बार, गम भवन की बस्तु बिहि सारे॥',latin:'Sahas Ban jug Phalit Ek Baar, Gam Bhavan Ki Bastu Behi Saare.',meaning:'Just once did I obtain the fruit of the thousand-edged arrow. By Ram\'s grace, I could bring Lanka under my control.'},
   // Doha 2
-  {v:11,type:'Doha',hindi:'राम तुम्हरे भारथ जप मोहि, कहौ तुम्ह समझाइ बिछुरी न होइ।
-तुम जड़ चेत समुझावहु तात, मोहि चाप सु होइ हनुमान जात॥',latin:'Ram Tumahre Bhart Japa Moi, Kahao Tum Samjhaai Bichhuri Na Hoi.
-Tum Jad Chet Samjhavu Tat, Moi Chap Su Hoi Hanuman Jaat.',meaning:'Ram, I am chanting your name for my welfare. You alone can grant me understanding so that my delusion is dispelled. O Hanuman, ignorant as I am, kindly instruct me.'},
+  {v:11,type:'Doha',hindi:'राम तुम्हरे भारथ जप मोहि, कहौ तुम्ह समझाइ बिछुरी न होइ।\nतुम जड़ चेत समुझावहु तात, मोहि चाप सु होइ हनुमान जात॥',latin:'Ram Tumahre Bhart Japa Moi, Kahao Tum Samjhaai Bichhuri Na Hoi.\nTum Jad Chet Samjhavu Tat, Moi Chap Su Hoi Hanuman Jaat.',meaning:'Ram, I am chanting your name for my welfare. You alone can grant me understanding so that my delusion is dispelled. O Hanuman, ignorant as I am, kindly instruct me.'},
   // Chaupai 9-16
   {v:12,type:'Chaupai',hindi:'जय जय जय हनुमान गोसाईं। कृपा करहु गुरु देव के संगी॥',latin:'Jai Jai Jai Hanuman Gosain. Kripa Karahu Gur Dev Ke Sangi.',meaning:'Victory, victory, victory to Hanuman, the Lord. Bestow your grace, O companion of the Guru.'},
   {v:13,type:'Chaupai',hindi:'भूत पिशाच निकट नहिं आवै। महाबीर जब नाम सुनावै॥',latin:'Bhoot Pishaach Nikat Nahi Aavai. Mahabeer Jab Naam Sunaavai.',meaning:'Ghosts and demons do not dare come near when the great hero\'s name is heard.'},
@@ -439,11 +33,7 @@ Tum Jad Chet Samjhavu Tat, Moi Chap Su Hoi Hanuman Jaat.',meaning:'Ram, I am cha
   // Doha 3
   {v:21,type:'Doha',hindi:'सब सुख लहै तुलसी भवन जैसें। राम रसना के बल सुहाई हनुमान जैसें॥',latin:'Sab Sukh Lhai Tulsai Bhavan Jaisen. Ram Rasan Ke Bal Suhaay Hanuman Jaisen.',meaning:'All joys are attained in the house of Tulsidas, by the power of Ram\'s name. Hanuman is the embodiment of this joy.'},
   // Doha 4 (Final)
-  {v:22,type:'Doha',hindi:'पवनसुत बल बुद्धि निधाना। तुलसी दास के दास सुधाना॥
-सीय राम जासु हितकारी। हनुमान चालीसा जाप निरतै गावहिं मन धीर॥
-
-॥ समाप्त ॥',latin:'Pavansut Bal Buddhi Nidhaana. Tulsi Daas Ke Daas Sudhaana.
-Siya Ram Jaasu Hitakaari. Hanuman Chaaleesaa Jaap Niratai Gaavahi Man Dheer.',meaning:'Hanuman, son of wind, the treasure of strength and wisdom. Tulsidas is your servant, the essence of compassion. Siya-Ram whose benefactor you are — they who chant Hanuman Chaaleesaa daily with a steady mind obtain the entire fruit.'}
+  {v:22,type:'Doha',hindi:'पवनसुत बल बुद्धि निधाना। तुलसी दास के दास सुधाना॥\nसीय राम जासु हितकारी। हनुमान चालीसा जाप निरतै गावहिं मन धीर॥\n\n॥ समाप्त ॥',latin:'Pavansut Bal Buddhi Nidhaana. Tulsi Daas Ke Daas Sudhaana.\nSiya Ram Jaasu Hitakaari. Hanuman Chaaleesaa Jaap Niratai Gaavahi Man Dheer.',meaning:'Hanuman, son of wind, the treasure of strength and wisdom. Tulsidas is your servant, the essence of compassion. Siya-Ram whose benefactor you are — they who chant Hanuman Chaaleesaa daily with a steady mind obtain the entire fruit.'}
 ];
 const CHALISA_TOTAL = CHALISA.length; // 23 verses
 
@@ -933,8 +523,7 @@ function chPlayVerse(){
   btn.textContent='⏹';btn.classList.add('playing');
   document.getElementById('ch-learn-progress').textContent='🔊 Playing verse...';
   const v=CHALISA[chCurrentVerse];
-  speakHindi(v.hindi.replace(/
-/g,'. '));
+  speakHindi(v.hindi.replace(/\n/g,'. '));
   setTimeout(()=>{btn.textContent='▶';btn.classList.remove('playing');document.getElementById('ch-learn-progress').textContent='✅ Now repeat 3 times with your parent! Press "I Know This!" when ready.'},v.hindi.length*60+500);
 }
 
@@ -976,8 +565,7 @@ function chShowFullVerse(){
 function chPlayFullVerse(){
   if(window.speechSynthesis&&window.speechSynthesis.speaking){window.speechSynthesis.cancel();return;}
   const v=CHALISA[chFullIndex];
-  speakHindi(v.hindi.replace(/
-/g,'. '));
+  speakHindi(v.hindi.replace(/\n/g,'. '));
 }
 
 function chNextVerse(){
@@ -1073,6 +661,3 @@ document.addEventListener('DOMContentLoaded',()=>{
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=5').catch(()=>{});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stopBalloons()});
 });
-</script>
-</body>
-</ht)}
