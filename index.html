@@ -994,7 +994,8 @@ function chPlayVerse(vNum){
   const v=CHALISA[vNum];
   if(!v||!v.audio){console.warn('No audio for verse',vNum);return;}
   try{
-    chAudio=new Audio('data:audio/mp3;base64,'+v.audio);
+    const mp3File='assets/audio/chalisa_verse_'+String(vNum).padStart(2,'0')+'.mp3';
+    chAudio=new Audio(mp3File);
     chAudioVerse=vNum;
     chAudio.play().catch(e=>console.warn('Audio play failed:',e));
   }catch(e){console.warn('Audio error:',e);}
