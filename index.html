@@ -12,8 +12,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-height:100vh;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.screen{display:none;width:100vw;min-height:100vh;position:fixed;top:0;left:0}
-.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.screen{display:none;width:100vw;min-height:100vh;position:fixed;top:0;left:0;pointer-events:none}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:auto;z-index:10}
 #home.active{position:absolute;top:0;left:0;right:0;bottom:0;justify-content:flex-start}
 #home.active .home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;display:flex;flex-direction:column;align-items:center;padding:20px 8px 80px}
 .screen.fscroll{overflow-y:auto;justify-content:flex-start;padding-top:20px}
@@ -434,17 +434,19 @@ function load(){
 }
 function totalStars(){return Object.values(S).reduce((a,b)=>a+b,0)}
 function updateStats(){
-  document.getElementById('totalStarsHome').textContent=`⭐ ${totalStars()} stars`;
-  document.getElementById('totalStarsDisplay').textContent=`⭐ ${totalStars()} Total Stars`;
-  document.getElementById('ps-colors').textContent=`${masteredColors.length}/8`;
-  document.getElementById('ps-animals').textContent=`0/20`;
-  document.getElementById('ps-chalisa').textContent=`${masteredVerses.length}/${CHALISA_TOTAL}`;
-  document.getElementById('ps-total').textContent=totalStars();
-  document.getElementById('ps-sessions').textContent=parseInt(localStorage.getItem('tp_sessions')||'0');
-  document.getElementById('ch-learned').textContent=masteredVerses.length;
-  document.getElementById('ch-total').textContent=`${masteredVerses.length}/${CHALISA_TOTAL}`;
-  document.getElementById('ch-streak').textContent=localStorage.getItem('tp_chalisa_streak')||'0';
-  document.getElementById('ch-days').textContent=localStorage.getItem('tp_chalisa_days')||'0';
+  const el=(id)=>document.getElementById(id);
+  const s=el('totalStarsHome');if(s)s.textContent=`⭐ ${totalStars()} stars`;
+  const sd=el('totalStarsDisplay');if(sd)sd.textContent=`⭐ ${totalStars()} Total Stars`;
+  const pc=el('ps-colors');if(pc)pc.textContent=`${masteredColors.length}/8`;
+  const pa=el('ps-animals');if(pa)pa.textContent=`0/20`;
+  const pch=el('ps-chalisa');if(pch)pch.textContent=`${masteredVerses.length}/${CHALISA_TOTAL}`;
+  const pt=el('ps-total');if(pt)pt.textContent=totalStars();
+  const pss=el('ps-sessions');if(pss)pss.textContent=parseInt(localStorage.getItem('tp_sessions')||'0');
+  const cl=el('ch-learned');if(cl)cl.textContent=masteredVerses.length;
+  const ct=el('ch-total');if(ct)ct.textContent=`${masteredVerses.length}/${CHALISA_TOTAL}`;
+  const cst=el('ch-streak');if(cst)cst.textContent=localStorage.getItem('tp_chalisa_streak')||'0';
+  const cd=el('ch-days');if(cd)cd.textContent=localStorage.getItem('tp_chalisa_days')||'0';
+  const chl=el('ch-total');if(chl)chl.textContent=`${masteredVerses.length}/${CHALISA_TOTAL}`;
 }
 
 // ============================================================
@@ -972,16 +974,20 @@ function checkChalisaTrophies(){
 // NAVIGATION
 // ============================================================
 function showScreen(id){
-  prev=id;
-  if(id!=='balloonpop')stopBalloons();
-  window.speechSynthesis&&window.speechSynthesis.cancel&&window.speechSynthesis.cancel();
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  updateStats();
-  if(id==='balloonpop')startBalloons();
-  if(id==='trophies')renderTrophies();
-  if(id==='parent')updateToggleUI();
-  if(id==='chalisa-home'){updateStats();renderGarland()}
+  try{
+    prev=id;
+    if(id!=='balloonpop')stopBalloons();
+    window.speechSynthesis&&window.speechSynthesis.cancel&&window.speechSynthesis.cancel();
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const target=document.getElementById(id);
+    if(!target){console.error('Screen not found:',id);return}
+    target.classList.add('active');
+    updateStats();
+    if(id==='balloonpop')startBalloons();
+    if(id==='trophies')renderTrophies();
+    if(id==='parent')updateToggleUI();
+    if(id==='chalisa-home'){updateStats();renderGarland()}
+  }catch(e){console.error('showScreen error:',e.message)}
 }
 function goHome(){const s=parseInt(localStorage.getItem('tp_sessions')||'0')+1;localStorage.setItem('tp_sessions',s.toString());showScreen('home')}
 
