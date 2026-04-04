@@ -14,8 +14,11 @@
 body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-height:100vh;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .screen{display:none;width:100vw;min-height:100vh;position:fixed;top:0;left:0}
 .screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#home.active{position:absolute;top:0;left:0;right:0;bottom:0;justify-content:flex-start}
+#home.active .home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;display:flex;flex-direction:column;align-items:center;padding:20px 8px 80px}
 .screen.fscroll{overflow-y:auto;justify-content:flex-start;padding-top:20px}
-#home{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00,#00D4AA,#6B5BFF);background-size:400% 400%;animation:gradShift 8s ease infinite;min-height:100vh;height:auto;overflow-y:scroll;-webkit-overflow-scrolling:touch}
+#home{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00,#00D4AA,#6B5BFF);background-size:400% 400%;animation:gradShift 8s ease infinite;position:absolute;inset:0}
+
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .mascot{font-size:5rem;animation:bounce 2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
 @keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
@@ -203,18 +206,20 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 <body>
 
 <div id="home" class="screen active">
-  <div class="mascot" id="mascot" onclick="mascotReact()">🎈</div>
-  <h1 class="home-title">TinyPlay</h1>
-  <p class="home-sub">Fun games & Hanuman Chalisa! 🙏</p>
-  <div class="star-count" id="totalStarsHome">⭐ 0 stars</div>
-  <div class="game-grid">
-    <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">🎨</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
-    <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">🐮</span><span class="lbl">Animals</span><span class="age">2+</span></button>
-    <button class="game-btn" id="btn-balloons" onclick="showScreen('balloonpop');startBalloons()"><span class="icon">🎈</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
-    <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
-    <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">⭐</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
-    <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
-    <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
+  <div class="home-scroll">
+    <div class="mascot" id="mascot" onclick="mascotReact()">🎈</div>
+    <h1 class="home-title">TinyPlay</h1>
+    <p class="home-sub">Fun games & Hanuman Chalisa! 🙏</p>
+    <div class="star-count" id="totalStarsHome">⭐ 0 stars</div>
+    <div class="game-grid">
+      <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">🎨</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
+      <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">🐮</span><span class="lbl">Animals</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-balloons" onclick="showScreen('balloonpop');startBalloons()"><span class="icon">🎈</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">⭐</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
+      <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
+    </div>
   </div>
   <div class="bottom-nav">
     <button class="nav-btn active" onclick="showScreen('home')">🏠</button>
