@@ -1,8 +1,8 @@
 {
-  "name": "TinyPlay — Fun Games for Kids",
+  "name": "TinyPlay",
   "short_name": "TinyPlay",
-  "description": "Delightful games for toddlers — Color Pop & Balloon Pop",
-  "start_url": "/index.html",
+  "description": "Fun games for kids under 5 & Hanuman Chalisa learning",
+  "start_url": "https://pankajkhannade.github.io/tinyplay/",
   "display": "standalone",
   "background_color": "#FFF9E6",
   "theme_color": "#FF6B6B",

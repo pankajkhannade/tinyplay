@@ -1,4 +1,4 @@
-const CACHE = 'tinyplay-v3'; // version bumped - forces refresh
+const CACHE = 'tinyplay-v6';
 const FILES = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -25,7 +25,6 @@ self.addEventListener('fetch', (e) => {
   );
 });
 
-// Force update check every load
 self.addEventListener('message', (e) => {
   if (e.data === 'skipWaiting') self.skipWaiting();
 });
