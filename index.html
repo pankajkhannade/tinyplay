@@ -715,7 +715,7 @@ function showMsg(msg){
 }
 function showStar(x,y){
   const d=document.createElement('div');d.className='star';
-  d.textContent=''⭐';d.style.left=x+'px';d.style.top=y+'px';
+  d.textContent='⭐';d.style.left=x+'px';d.style.top=y+'px';
   document.body.appendChild(d);
   setTimeout(()=>d.remove(),1000);
 }
