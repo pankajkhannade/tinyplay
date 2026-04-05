@@ -207,7 +207,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">🌟</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
-      <button class="game-btn" id="btn-bodyparts" onclick="showScreen('bodyparts');startBodyParts()"><span class="icon">🪈</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-bodyparts" onclick="showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
@@ -409,7 +409,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
         <div class="ps-card"><div class="pse">🎈</div><div class="psn">Balloons</div><div class="psv" id="ps-balloons">0</div></div>
         <div class="ps-card"><div class="pse">🌟</div><div class="psn">Shapes</div><div class="psv" id="ps-shapes">0</div></div>
         <div class="ps-card"><div class="pse">🧠</div><div class="psn">Memory</div><div class="psv" id="ps-memory">0</div></div>
-        <div class="ps-card"><div class="pse">🪈</div><div class="psn">Body Parts</div><div class="psv" id="ps-bodyparts">0/8</div></div>
+        <div class="ps-card"><div class="pse">🧍</div><div class="psn">Body Parts</div><div class="psv" id="ps-bodyparts">0/8</div></div>
         <div class="ps-card"><div class="pse">🕊️</div><div class="psn">Chalisa</div><div class="psv" id="ps-chalisa">0/27</div></div>
       </div>
     </div>
@@ -554,20 +554,20 @@ const TROPHIES = [
   {id:'counting8',emoji:'🔢',name:'Counter',desc:'Complete 8 counting rounds',check:()=>S.counting>=8},
   {id:'shapes8',emoji:'🌟',name:'Shape Seeker',desc:'Complete 8 shape rounds',check:()=>S.shapes>=8},
   {id:'memory6',emoji:'🧠',name:'Memory Pro',desc:'Complete 6 memory rounds',check:()=>S.memory>=6},
-  {id:'bodyparts8',emoji:'🪈',name:'Body Smart',desc:'Learn all 8 body parts',check:()=>S.bodyparts>=8},
+  {id:'bodyparts8',emoji:'🧍',name:'Body Smart',desc:'Learn all 8 body parts',check:()=>S.bodyparts>=8},
   {id:'chalisa10',emoji:'🕊️',name:'Chalisa Learner',desc:'Learn 10 verses',check:()=>masteredVerses.length>=10},
   {id:'chalisa23',emoji:'🙏',name:'Hanuman Devotee',desc:'Learn all 27 verses',check:()=>masteredVerses.length>=27}
 ];
 
 const BODY_PARTS = [
-  {emoji:'&#x1F446;',name:'Hand',hindi:'&#x0939;&#x093E;&#x0925;'},
-  {emoji:'&#x1F442;',name:'Ear',hindi:'&#x0915;&#x093E;&#x0923;'},
-  {emoji:'&#x1F441;',name:'Eye',hindi:'&#x0906;&#x0902;&#x0916;'},
+  {emoji:'✋',name:'Hand',hindi:'&#x0939;&#x093E;&#x0925;'},
+  {emoji:'👂',name:'Ear',hindi:'&#x0915;&#x093E;&#x0923;'},
+  {emoji:'👁️',name:'Eye',hindi:'&#x0906;&#x0902;&#x0916;'},
   {emoji:'👃',name:'Nose',hindi:'&#x0928;&#x093E;&#x0915;'},
-  {emoji:'&#x1F445;',name:'Mouth',hindi:'&#x092E;&#x0941;&#x0901;&#x0939;'},
-  {emoji:'&#x1F9B4;',name:'Leg',hindi:'&#x0920;&#x0940;&#x091C;'},
-  {emoji:'&#x1F9B9;',name:'Foot',hindi:'&#x092A;&#x0948;&#x0930;'},
-  {emoji:'🪈',name:'Head',hindi:'&#x0938;&#x093F;&#x0930;'}
+  {emoji:'👄',name:'Mouth',hindi:'&#x092E;&#x0941;&#x0901;&#x0939;'},
+  {emoji:'🦵',name:'Leg',hindi:'&#x0920;&#x0940;&#x091C;'},
+  {emoji:'🦶',name:'Foot',hindi:'&#x092A;&#x0948;&#x0930;'},
+  {emoji:'🗣️',name:'Head',hindi:'&#x0938;&#x093F;&#x0930;'}
 ];
 
 // === STATE ===
@@ -1051,7 +1051,7 @@ function startBodyParts(){
 }
 function nextBPRound(){
   if(bpRound>=8){
-    showWin('Body Smart!','You know all your body parts!','🪈');
+    showWin('Body Smart!','You know all your body parts!','🧍');
     S.bodyparts=8;saveState();
     setTimeout(()=>{goHome();},2000);
     return;
