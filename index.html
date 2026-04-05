@@ -178,6 +178,25 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 .ps-total-card .pst-e{font-size:2.5rem}.ps-total-card .pst-l{font-size:0.85rem;opacity:0.9}.ps-total-card .pst-v{font-size:1.8rem;font-weight:900;margin-top:4px}
 /* Win screen */
 .win-screen{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;animation:fadeIn 0.3s}
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:199;overflow:hidden}
+.confetti-piece{position:absolute;width:10px;height:10px;border-radius:2px;top:-10px;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.confetti-star{position:absolute;font-size:1.2rem;top:-20px;animation:confettiStar linear forwards}
+@keyframes confettiStar{0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(110vh) rotate(360deg) scale(0.5);opacity:0}}
+.avatar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:250}
+.avatar-card{background:white;border-radius:28px;padding:28px 20px;max-width:340px;width:90%;text-align:center;animation:streakPop 0.4s ease-out}
+.avatar-title{font-size:1.4rem;font-weight:900;color:#333;margin-bottom:4px}
+.avatar-sub{font-size:0.9rem;color:#888;margin-bottom:16px}
+.avatars-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+.av-btn{width:64px;height:64px;border-radius:18px;border:4px solid #eee;font-size:2rem;cursor:pointer;background:white;transition:transform 0.1s;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.av-btn:hover{border-color:#FF6B6B;transform:scale(1.1)}
+.av-btn:active{transform:scale(0.95)}
+.av-btn.selected{border-color:#FF6B6B;background:#FFF0F0;transform:scale(1.1)}
+.av-confirm{background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:white;border:none;border-radius:18px;padding:12px 28px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 #cc4a3a;width:100%}
+.av-confirm:active{transform:translateY(2px);box-shadow:0 2px 0 #cc4a3a}
+.share-banner{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.4);border-radius:16px;padding:6px 14px;font-size:0.85rem;color:white;cursor:pointer;backdrop-filter:blur(5px);transition:transform 0.1s}
+.share-banner:active{transform:scale(0.95)}
+.share-banner:hover{background:rgba(255,255,255,0.35)}
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 .win-card{background:white;border-radius:30px;padding:30px;max-width:300px;width:90%;text-align:center;animation:winPop 0.4s ease-out}
 @keyframes winPop{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
@@ -200,15 +219,16 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
     <p class="home-sub">Fun games &amp; Hanuman Chalisa! 🙏</p>
     <div class="star-count" id="totalStarsHome">⭐ 0 stars</div>
     <div class="streak-badge" id="streakBadge" onclick="showStreakInfo()">🔥 Day Streak: <span id="streakNum">0</span></div>
+    <button class="share-banner" id="shareBtn" onclick="shareApp()">🎁 Share TinyPlay with Friends!</button>
     <div class="game-grid">
-      <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">🎨</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
-      <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">🐮</span><span class="lbl">Animals</span><span class="age">2+</span></button>
-      <button class="game-btn" id="btn-balloons" onclick="showScreen('balloonpop');startBalloons()"><span class="icon">🎈</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
-      <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
-      <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">🌟</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
-      <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
-      <button class="game-btn" id="btn-bodyparts" onclick="showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
-      <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
+      <button class="game-btn" id="btn-colors" onclick="tap2();startColorLearn()"><span class="icon">🎨</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
+      <button class="game-btn" id="btn-animals" onclick="tap2();showScreen('animals');startAnimals()"><span class="icon">🐮</span><span class="lbl">Animals</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-balloons" onclick="tap2();showScreen('balloonpop');startBalloons()"><span class="icon">🎈</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-counting" onclick="tap2();showScreen('counting');startCounting()"><span class="icon">🔢</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-shapes" onclick="tap2();showScreen('shapes');startShapes()"><span class="icon">🌟</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-memory" onclick="tap2();showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
+      <button class="game-btn" id="btn-bodyparts" onclick="tap2();showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
   <div class="bottom-nav">
@@ -417,8 +437,20 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <div class="pst-e">⭐</div><div class="pst-l">Total Stars Earned</div><div class="pst-v" id="ps-total">0</div>
     </div>
     <div style="text-align:center;margin-top:8px">
+      <button class="ch-btn" onclick="showAvatarPicker()" style="background:#6B5BFF;box-shadow:0 5px 0 #4a3db8;font-size:0.9rem;padding:10px 24px;margin-bottom:6px">🎭 Change Avatar</button>
+      <br>
       <button class="ch-btn" onclick="resetProgress()" style="background:#ccc;box-shadow:0 5px 0 #999;font-size:0.9rem;padding:10px 24px">Reset Progress</button>
     </div>
+  </div>
+</div>
+
+<!-- Avatar Picker -->
+<div id="avatar-overlay" class="avatar-overlay" style="display:none">
+  <div class="avatar-card">
+    <div class="avatar-title">👋 Choose Your Buddy!</div>
+    <div class="avatar-sub">Pick your favorite character to join you</div>
+    <div class="avatars-grid" id="avatarsGrid"></div>
+    <button class="av-confirm" id="avConfirmBtn" onclick="confirmAvatar()">Let's Go! 🎉</button>
   </div>
 </div>
 
@@ -636,6 +668,7 @@ function loadState(){
 function refreshUI(){
   const ts=totalStars();
   const sH=el('totalStarsHome'); if(sH) sH.innerHTML='⭐ '+ts+' stars';
+  const mascot=el('mascot'); if(mascot) mascot.textContent=getAvatar();
   const sD=el('totalStarsDisplay'); if(sD) sD.textContent='⭐ '+ts+' Total Stars';
   const pc=el('ps-colors'); if(pc) pc.textContent=S.colors+'/8';
   const pa=el('ps-animals'); if(pa) pa.textContent=S.animals+'/20';
@@ -732,16 +765,45 @@ function mascotReact(){
   const m=el('mascot');
   const phrases=['😊','😍','😄','🥰'];
   m.textContent=phrases[Math.floor(Math.random()*phrases.length)];
-  setTimeout(()=>m.textContent='🎈',1500);
+  setTimeout(()=>{m.textContent=getAvatar();},1500);
+  showAvatarPicker();
 }
 
 // === WIN ===
+function launchConfetti(){
+  // Remove old confetti
+  document.querySelectorAll('.confetti-container').forEach(c=>c.remove());
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const colors = ['#FF6B6B','#FF8E53','#FFEE00','#00D4AA','#6B5BFF','#FF69B4','#00BFFF','#32CD32'];
+  const shapes = ['⭐','🎉','🎈','🌟','💖','✨','🌈','💫'];
+  for(let i=0;i<40;i++){
+    const piece = document.createElement('div');
+    piece.className = Math.random()>0.6 ? 'confetti-star' : 'confetti-piece';
+    piece.style.left = Math.random()*100 + '%';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDuration = (1.5+Math.random()*1.5) + 's';
+    piece.style.animationDelay = (Math.random()*0.8) + 's';
+    if(piece.className==='confetti-star'){
+      piece.textContent = shapes[Math.floor(Math.random()*shapes.length)];
+      piece.style.fontSize = (1+Math.random()*1) + 'rem';
+    } else {
+      piece.style.width = (6+Math.random()*8) + 'px';
+      piece.style.height = (6+Math.random()*8) + 'px';
+      piece.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    }
+    container.appendChild(piece);
+  }
+  setTimeout(()=>container.remove(),3500);
+}
+
 function showWin(title,msg,emoji){
   el('wtitle').textContent=title;
   el('wmsg').textContent=msg;
   el('wemoji').textContent=emoji||'🎉';
   el('win-overlay').style.display='flex';
-  win2(); celebrateStars();
+  win2(); celebrateStars(); launchConfetti();
 }
 function winClose(){ el('win-overlay').style.display='none'; }
 
@@ -1369,11 +1431,66 @@ function resetProgress(){
   }
 }
 
+// === AVATAR ===
+const AVATARS = ['🦁','🐼','🦊','🐨','🐰','🐻','🐯','🐸','🦄','🐷','🐵','🦋'];
+
+function getAvatar(){return localStorage.getItem('tp_avatar')||'🎈';}
+function setAvatar(a){localStorage.setItem('tp_avatar',a);localStorage.setItem('tp_avatar_seen','1');}
+
+function showAvatarPicker(){
+  const overlay = el('avatar-overlay');
+  const grid = el('avatarsGrid');
+  grid.innerHTML = '';
+  let selected = getAvatar();
+  AVATARS.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'av-btn' + (a===selected?' selected':'');
+    btn.textContent = a;
+    btn.onclick = () => {
+      document.querySelectorAll('.av-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selected = a;
+    };
+    grid.appendChild(btn);
+  });
+  // Store reference for confirm
+  window._pendingAvatar = selected;
+  overlay.style.display = 'flex';
+}
+
+function confirmAvatar(){
+  const a = window._pendingAvatar || getAvatar();
+  setAvatar(a);
+  el('mascot').textContent = a;
+  el('avatar-overlay').style.display = 'none';
+  tap2();
+}
+
+function checkAvatarFirstTime(){
+  if(!localStorage.getItem('tp_avatar_seen')){
+    setTimeout(showAvatarPicker, 800);
+  } else {
+    el('mascot').textContent = getAvatar();
+  }
+}
+
+// === SHARE ===
+function shareApp(){
+  tap2();
+  const msg = "🎈 TinyPlay — Fun learning games for kids! Colors, Animals, Memory, Hanuman Chalisa & more. Free PWA: https://pankajkhannade.github.io/tinyplay/";
+  if(navigator.share){
+    navigator.share({title:'TinyPlay 🎈',text:msg,url:'https://pankajkhannade.github.io/tinyplay/'}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(msg).then(()=>showMsg('📋 Link copied! Share it with friends!')).catch(()=>showMsg('Share: https://pankajkhannade.github.io/tinyplay/'));
+  }
+}
+
 // === INIT ===
 document.addEventListener('DOMContentLoaded',()=>{
   loadState();
   refreshUI();
   updateDailyStreak();
+  checkAvatarFirstTime();
   // Register SW
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW registration failed:',e));
