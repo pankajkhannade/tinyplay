@@ -52,6 +52,18 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-shapes{background:linear-gradient(135deg,#E91E63,#9C27B0,#673AB7)}
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
+#btn-bodyparts{background:linear-gradient(135deg,#FF6B6B,#00D4AA)}
+
+/* Body Parts */
+#bodyparts{background:linear-gradient(135deg,#667eea,#00D4AA)}
+.bp-prompt{position:absolute;top:60px;font-size:1.1rem;color:rgba(255,255,255,0.9);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,0.2);text-align:center;width:100%;padding:0 20px}
+.bp-round{position:absolute;top:95px;font-size:0.9rem;color:rgba(255,255,255,0.7)}
+.bp-character{font-size:5rem;margin-top:20px;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
+.bp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px;max-width:340px;width:100%;margin-top:16px}
+.bp-btn{background:white;border-radius:20px;border:4px solid #ddd;cursor:pointer;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 0 #bbb;transition:transform 0.1s;font-family:inherit}
+.bp-btn:active{transform:scale(0.94) translateY(3px);box-shadow:0 1px 0 #bbb}
+.bp-btn .bpemoji{font-size:2.5rem}.bp-btn .bpname{font-size:0.75rem;font-weight:700;color:#333;margin-top:2px}
+.bp-hint{position:absolute;bottom:120px;font-size:0.95rem;color:rgba(255,255,255,0.8);text-align:center}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;gap:8px;justify-content:center;padding:10px 16px 20px;background:rgba(0,0,0,0.25);border-radius:30px 30px 0 0;backdrop-filter:blur(8px);z-index:20}
 .nav-btn{background:rgba(255,255,255,0.25);border:none;border-radius:50%;width:48px;height:48px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.1s;color:white;flex-shrink:0}
 .nav-btn:active{transform:scale(0.9)}.nav-btn.active{background:rgba(255,255,255,0.35)}
@@ -192,9 +204,10 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">&#x1F3A8;</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
       <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">&#x1F42E;</span><span class="lbl">Animals</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-balloons" onclick="showScreen('balloonpop');startBalloons()"><span class="icon">&#x1F388;</span><span class="lbl">Balloon Pop</span><span class="age">2+</span></button>
-      <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="lbl">Counting</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-counting" onclick="showScreen('counting');startCounting()"><span class="icon">&#x1F522;</span><span class="lbl">Counting</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-shapes" onclick="showScreen('shapes');startShapes()"><span class="icon">&#x1F31F;</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-memory" onclick="showScreen('memory');startMemory()"><span class="icon">&#x1F9E0;</span><span class="lbl">Memory</span><span class="age">3+</span></button>
+      <button class="game-btn" id="btn-bodyparts" onclick="showScreen('bodyparts');startBodyParts()"><span class="icon">&#x1F9B8;</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="showScreen('chalisa-home')"><span class="icon">&#x1F64F;</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
@@ -261,6 +274,17 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
   <div class="score-display">&#x2B50; <span id="m-score">0</span></div>
   <div class="round-info-center" id="m-progress">Round 1 / 6</div>
   <div class="m-grid" id="m-grid"></div>
+</div>
+
+<!-- BODY PARTS -->
+<div id="bodyparts" class="screen">
+  <button class="back-btn" onclick="goHome()">&#x1F3E0;</button>
+  <div class="score-display">&#x2B50; <span id="bp-score">0</span></div>
+  <div class="bp-prompt" id="bp-prompt">Find the body part!</div>
+  <div class="bp-round" id="bp-round">Round 1 / 8</div>
+  <div class="bp-character" id="bp-character">&#x1F9D4;</div>
+  <div class="bp-grid" id="bp-grid"></div>
+  <div class="bp-hint" id="bp-hint">Tap the right part on you!</div>
 </div>
 
 <!-- CHALISA HOME -->
@@ -385,6 +409,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
         <div class="ps-card"><div class="pse">&#x1F388;</div><div class="psn">Balloons</div><div class="psv" id="ps-balloons">0</div></div>
         <div class="ps-card"><div class="pse">&#x1F31F;</div><div class="psn">Shapes</div><div class="psv" id="ps-shapes">0</div></div>
         <div class="ps-card"><div class="pse">&#x1F9E0;</div><div class="psn">Memory</div><div class="psv" id="ps-memory">0</div></div>
+        <div class="ps-card"><div class="pse">&#x1F9B8;</div><div class="psn">Body Parts</div><div class="psv" id="ps-bodyparts">0/8</div></div>
         <div class="ps-card"><div class="pse">&#x1F54A;</div><div class="psn">Chalisa</div><div class="psv" id="ps-chalisa">0/27</div></div>
       </div>
     </div>
@@ -529,12 +554,24 @@ const TROPHIES = [
   {id:'counting8',emoji:'&#x1F522;',name:'Counter',desc:'Complete 8 counting rounds',check:()=>S.counting>=8},
   {id:'shapes8',emoji:'&#x1F31F;',name:'Shape Seeker',desc:'Complete 8 shape rounds',check:()=>S.shapes>=8},
   {id:'memory6',emoji:'&#x1F9E0;',name:'Memory Pro',desc:'Complete 6 memory rounds',check:()=>S.memory>=6},
+  {id:'bodyparts8',emoji:'&#x1F9B8;',name:'Body Smart',desc:'Learn all 8 body parts',check:()=>S.bodyparts>=8},
   {id:'chalisa10',emoji:'&#x1F54A;',name:'Chalisa Learner',desc:'Learn 10 verses',check:()=>masteredVerses.length>=10},
   {id:'chalisa23',emoji:'&#x1F64F;',name:'Hanuman Devotee',desc:'Learn all 27 verses',check:()=>masteredVerses.length>=27}
 ];
 
+const BODY_PARTS = [
+  {emoji:'&#x1F446;',name:'Hand',hindi:'&#x0939;&#x093E;&#x0925;'},
+  {emoji:'&#x1F442;',name:'Ear',hindi:'&#x0915;&#x093E;&#x0923;'},
+  {emoji:'&#x1F441;',name:'Eye',hindi:'&#x0906;&#x0902;&#x0916;'},
+  {emoji:'&#x1F443;',name:'Nose',hindi:'&#x0928;&#x093E;&#x0915;'},
+  {emoji:'&#x1F445;',name:'Mouth',hindi:'&#x092E;&#x0941;&#x0901;&#x0939;'},
+  {emoji:'&#x1F9B4;',name:'Leg',hindi:'&#x0920;&#x0940;&#x091C;'},
+  {emoji:'&#x1F9B9;',name:'Foot',hindi:'&#x092A;&#x0948;&#x0930;'},
+  {emoji:'&#x1F9B8;',name:'Head',hindi:'&#x0938;&#x093F;&#x0930;'}
+];
+
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0};
 let soundOn=true, voiceOn=true, hapticOn=true;
 let masteredColors=[];
 let masteredVerses=[];
@@ -557,6 +594,9 @@ let shRound=0, shScore=0, shTarget=null;
 
 // Memory
 let mRound=0, mScore=0, mFlipped=[], mMatched=0, mLocked=false;
+
+// Body Parts
+let bpRound=0, bpScore=0, bpPool=[], bpTarget=null;
 
 // Chalisa
 let chVerseIdx=0, chCurrentMode='';
@@ -584,6 +624,7 @@ function loadState(){
     if(d.counting!==undefined) S.counting=d.counting;
     if(d.shapes!==undefined) S.shapes=d.shapes;
     if(d.memory!==undefined) S.memory=d.memory;
+    if(d.bodyparts!==undefined) S.bodyparts=d.bodyparts;
     masteredColors=JSON.parse(localStorage.getItem('tp_colors')||'[]');
     masteredVerses=JSON.parse(localStorage.getItem('tp_verses')||'[]');
     soundOn=localStorage.getItem('tp_sound')!=='0';
@@ -601,6 +642,7 @@ function refreshUI(){
   const pb=el('ps-balloons'); if(pb) pb.textContent=S.balloons;
   const psh=el('ps-shapes'); if(psh) psh.textContent=S.shapes;
   const pm=el('ps-memory'); if(pm) pm.textContent=S.memory;
+  const pbp=el('ps-bodyparts'); if(pbp) pbp.textContent=S.bodyparts+'/8';
   const pch=el('ps-chalisa'); if(pch) pch.textContent=masteredVerses.length+'/27';
   const pt=el('ps-total'); if(pt) pt.textContent=ts;
   const cl=el('ch-learned'); if(cl) cl.textContent=masteredVerses.length;
@@ -999,6 +1041,48 @@ function flipCard(card,emoji){
 function pairs_count(){
   // Each memory round has exactly 2 pairs (4 cards)
   return 2;
+}
+
+// === BODY PARTS ===
+function startBodyParts(){
+  bpRound=0;bpScore=0;
+  el('bp-score').textContent='0';
+  nextBPRound();
+}
+function nextBPRound(){
+  if(bpRound>=8){
+    showWin('Body Smart!','You know all your body parts!','&#x1F9B8;');
+    S.bodyparts=8;saveState();
+    setTimeout(()=>{goHome();},2000);
+    return;
+  }
+  bpPool=[...BODY_PARTS].sort(()=>Math.random()-0.5).slice(0,4);
+  bpTarget=bpPool[Math.floor(Math.random()*bpPool.length)];
+  el('bp-prompt').textContent='Find: '+bpTarget.emoji+' '+bpTarget.name;
+  el('bp-round').textContent='Round '+(bpRound+1)+' / 8';
+  el('bp-hint').textContent='This is your '+bpTarget.name.toLowerCase()+'!';
+  const grid=el('bp-grid');grid.innerHTML='';
+  bpPool.forEach(p=>{
+    const btn=document.createElement('button');
+    btn.className='bp-btn';
+    btn.innerHTML='<div class="bpemoji">'+p.emoji+'</div><div class="bpname">'+p.name+'</div>';
+    btn.onclick=()=>bodyPartPick(p);
+    grid.appendChild(btn);
+  });
+}
+function bodyPartPick(p){
+  haptic();pop();
+  if(p.name===bpTarget.name){
+    ok();bpScore++;
+    el('bp-prompt').textContent='&#x2705; Correct! It\'s your '+bpTarget.name.toLowerCase()+'!';
+    bpRound++;
+    showScore('&#x2B50;');
+    S.bodyparts=Math.max(S.bodyparts,bpRound);saveState();
+    setTimeout(nextBPRound,900);
+  } else {
+    no2();
+    el('bp-prompt').textContent='&#x274C; Try: '+bpTarget.emoji+' '+bpTarget.name;
+  }
 }
 
 // === CHALISA AUDIO ===
