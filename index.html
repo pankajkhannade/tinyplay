@@ -28,6 +28,19 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 .home-title{font-size:2.8rem;color:white;text-shadow:3px 3px 0 rgba(0,0,0,0.15);letter-spacing:1px;margin:8px 0}
 .home-sub{color:rgba(255,255,255,0.9);font-size:1rem;margin-bottom:12px;text-shadow:1px 1px 0 rgba(0,0,0,0.1)}
 .star-count{background:rgba(255,255,255,0.2);border-radius:30px;padding:6px 18px;color:#FFEE00;font-size:1rem;font-weight:bold;backdrop-filter:blur(5px);margin-bottom:10px}
+.streak-badge{background:rgba(255,100,0,0.85);border-radius:20px;padding:5px 16px;color:white;font-size:0.9rem;font-weight:bold;margin-bottom:8px;cursor:pointer;transition:transform 0.1s}
+.streak-badge:active{transform:scale(0.94)}
+.streak-badge.hot{background:linear-gradient(135deg,#FF6B00,#FF4500);animation:streakPulse 2s ease-in-out infinite}
+@keyframes streakPulse{0%,100%{box-shadow:0 0 8px rgba(255,100,0,0.6)}50%{box-shadow:0 0 20px rgba(255,69,0,0.9)}};
+.streak-popup{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300}
+.streak-card{background:white;border-radius:28px;padding:28px 24px;max-width:280px;width:90%;text-align:center;animation:streakPop 0.4s ease-out}
+@keyframes streakPop{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.streak-card .sc-em{font-size:3.5rem;margin-bottom:8px}
+.streak-card .sc-title{font-size:1.4rem;font-weight:900;color:#333;margin-bottom:6px}
+.streak-card .sc-sub{font-size:0.95rem;color:#666;margin-bottom:16px;line-height:1.4}
+.streak-card .sc-btn{background:linear-gradient(135deg,#FF6B00,#FF4500);color:white;border:none;border-radius:18px;padding:12px 28px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 #cc3700}
+.streak-day{background:#FFF3E0;border-radius:12px;padding:10px 16px;margin:8px 0;display:flex;align-items:center;justify-content:center;gap:8px}
+.streak-day .sd-num{font-size:2rem;font-weight:900;color:#FF6B00}.streak-day .sd-lbl{font-size:0.8rem;color:#888;text-align:left}
 .game-grid{display:flex;flex-wrap:wrap;justify-content:center;max-width:380px;gap:10px;padding:8px}
 .game-btn{width:165px;height:150px;border-radius:24px;border:5px solid white;cursor:pointer;color:white;text-shadow:2px 2px 0 rgba(0,0,0,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 6px 0 rgba(0,0,0,0.12);transition:transform 0.1s;position:relative;overflow:hidden;font-family:inherit}
 .game-btn:active{transform:scale(0.94) translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,0.12)}
@@ -174,6 +187,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
     <h1 class="home-title">TinyPlay</h1>
     <p class="home-sub">Fun games &amp; Hanuman Chalisa! &#x1F64F;</p>
     <div class="star-count" id="totalStarsHome">&#x2B50; 0 stars</div>
+    <div class="streak-badge" id="streakBadge" onclick="showStreakInfo()">&#x1F525; Day Streak: <span id="streakNum">0</span></div>
     <div class="game-grid">
       <button class="game-btn" id="btn-colors" onclick="startColorLearn()"><span class="icon">&#x1F3A8;</span><span class="lbl">Learn Colors</span><span class="age">Ages 2+</span></button>
       <button class="game-btn" id="btn-animals" onclick="showScreen('animals');startAnimals()"><span class="icon">&#x1F42E;</span><span class="lbl">Animals</span><span class="age">2+</span></button>
@@ -592,6 +606,7 @@ function refreshUI(){
   const cl=el('ch-learned'); if(cl) cl.textContent=masteredVerses.length;
   const ct=el('ch-total'); if(ct) ct.textContent=masteredVerses.length+'/27';
   const cst=el('ch-streak'); if(cst) cst.textContent=localStorage.getItem('tp_chalisa_streak')||'0';
+  refreshStreakUI();
   // Toggles
   el('toggle-sound').className='toggle'+(soundOn?' on':'');
   el('toggle-voice').className='toggle'+(voiceOn?' on':'');
@@ -1002,6 +1017,91 @@ function chPlayVerse(vNum){
 }
 function chStopAllAudio(){chStopVerse();if(window.speechSynthesis)window.speechSynthesis.cancel();}
 
+// === STREAK ===
+let streakCelebratedToday = false;
+
+function updateDailyStreak(){
+  const today = new Date().toDateString();
+  const lastPlayed = localStorage.getItem('tp_streak_last') || '';
+  const streakCount = parseInt(localStorage.getItem('tp_streak_count') || '0');
+  const bestStreak = parseInt(localStorage.getItem('tp_streak_best') || '0');
+
+  if(lastPlayed !== today){
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    const newStreak = (lastPlayed === yesterday) ? streakCount + 1 : 1;
+    localStorage.setItem('tp_streak_count', newStreak);
+    localStorage.setItem('tp_streak_last', today);
+    if(newStreak > bestStreak){
+      localStorage.setItem('tp_streak_best', newStreak);
+    }
+    if(lastPlayed !== '' && !streakCelebratedToday){
+      // Streak maintained or new streak — show celebration
+      streakCelebratedToday = true;
+      showStreakCelebration(newStreak);
+    }
+  } else {
+    streakCelebratedToday = true; // already shown today
+  }
+  refreshStreakUI();
+}
+
+function refreshStreakUI(){
+  const count = parseInt(localStorage.getItem('tp_streak_count') || '0');
+  const badge = el('streakBadge');
+  const numEl = el('streakNum');
+  if(numEl) numEl.textContent = count;
+  if(badge){
+    if(count >= 3) badge.classList.add('hot');
+    else badge.classList.remove('hot');
+  }
+}
+
+function showStreakCelebration(streak){
+  // Don't auto-show for day 1 (new streak after a gap)
+  if(streak <= 1) return;
+  const streakBest = parseInt(localStorage.getItem('tp_streak_best') || '0');
+  const overlay = document.createElement('div');
+  overlay.className = 'streak-popup';
+  overlay.id = 'streak-overlay';
+  overlay.innerHTML = `
+    <div class="streak-card">
+      <div class="sc-em">${streak >= 7 ? '&#x1F31F;' : streak >= 3 ? '&#x1F525;' : '&#x1F389;'}</div>
+      <div class="sc-title">${streak >= 7 ? 'Amazing! ' + streak + ' Day Streak!' : streak >= 3 ? streak + ' Days Strong!' : 'Keep It Up!'}</div>
+      <div class="sc-sub">${streak >= 7 ? 'Incredible! You play every day!' : streak >= 3 ? 'You are building a habit! Keep going!' : 'Come back tomorrow to keep your streak!'}</div>
+      <div class="streak-day">
+        <div class="sd-num">&#x1F525; ${streak}</div>
+        <div class="sd-lbl">Day Streak<br>Best: ${streakBest}</div>
+      </div>
+      <button class="sc-btn" onclick="closeStreakCelebration()">Let's Play! &#x1F388;</button>
+    </div>`;
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeStreakCelebration(); });
+  document.body.appendChild(overlay);
+}
+
+function closeStreakCelebration(){
+  const overlay = el('streak-overlay');
+  if(overlay) overlay.remove();
+}
+
+function showStreakInfo(){
+  const count = parseInt(localStorage.getItem('tp_streak_count') || '0');
+  const best = parseInt(localStorage.getItem('tp_streak_best') || '0');
+  const lastPlayed = localStorage.getItem('tp_streak_last') || 'Never';
+  const overlay = document.createElement('div');
+  overlay.className = 'streak-popup';
+  overlay.id = 'streak-overlay';
+  overlay.innerHTML = `<div class="streak-card">
+    <div class="sc-em">&#x1F525;</div>
+    <div class="sc-title">Daily Streak</div>
+    <div class="sc-sub">Play at least one game every day to grow your streak!</div>
+    <div class="streak-day"><div class="sd-num">${count}</div><div class="sd-lbl">Current Streak<br>Best Ever: ${best}</div></div>
+    <div class="sc-sub" style="font-size:0.8rem">Last played: ${lastPlayed}</div>
+    <button class="sc-btn" onclick="closeStreakCelebration()">Got it!</button>
+  </div>`;
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeStreakCelebration(); });
+  document.body.appendChild(overlay);
+}
+
 // === CHALISA ===
 function updateChalisaStreak(){
   const today=new Date().toDateString();
@@ -1189,6 +1289,7 @@ function resetProgress(){
 document.addEventListener('DOMContentLoaded',()=>{
   loadState();
   refreshUI();
+  updateDailyStreak();
   // Register SW
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW registration failed:',e));
