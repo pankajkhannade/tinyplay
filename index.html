@@ -53,9 +53,23 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
 #btn-bodyparts{background:linear-gradient(135deg,#FF6B6B,#00D4AA)}
+#btn-vehicles{background:linear-gradient(135deg,#1565C0,#1976D2,#42A5F5)}
 
 /* Body Parts */
 #bodyparts{background:linear-gradient(135deg,#667eea,#00D4AA)}
+
+/* Vehicle Sounds */
+#vehicles{background:linear-gradient(135deg,#1565C0,#0D47A1)}
+.vh-prompt{position:absolute;top:60px;font-size:1.1rem;color:rgba(255,255,255,0.9);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,0.2);text-align:center;width:100%;padding:0 20px}
+.vh-round{position:absolute;top:95px;font-size:0.9rem;color:rgba(255,255,255,0.7)}
+.vh-sound-btn{background:white;border-radius:28px;border:5px solid #FFD700;cursor:pointer;padding:20px 36px;margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 6px 0 #FFD700;transition:transform 0.1s;font-family:inherit}
+.vh-sound-btn:active{transform:scale(0.94) translateY(3px);box-shadow:0 3px 0 #FFD700}
+.vh-sound-btn .vh-icon{font-size:4rem}.vh-sound-btn .vh-label{font-size:0.9rem;font-weight:700;color:#333}
+.vh-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;max-width:340px;width:100%}
+.vh-btn{background:white;border-radius:20px;border:4px solid #ddd;cursor:pointer;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 0 #bbb;transition:transform 0.1s;font-family:inherit}
+.vh-btn:active{transform:scale(0.94) translateY(3px);box-shadow:0 1px 0 #bbb}
+.vh-btn .vhemoji{font-size:3rem}.vh-btn .vhname{font-size:0.85rem;font-weight:700;color:#333;margin-top:4px}
+.vh-hint{position:absolute;bottom:130px;font-size:0.95rem;color:rgba(255,255,255,0.8);text-align:center}
 .bp-prompt{position:absolute;top:60px;font-size:1.1rem;color:rgba(255,255,255,0.9);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,0.2);text-align:center;width:100%;padding:0 20px}
 .bp-round{position:absolute;top:95px;font-size:0.9rem;color:rgba(255,255,255,0.7)}
 .bp-character{font-size:5rem;margin-top:20px;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
@@ -228,6 +242,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-shapes" onclick="tap2();showScreen('shapes');startShapes()"><span class="icon">🌟</span><span class="lbl">Shapes</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-memory" onclick="tap2();showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
       <button class="game-btn" id="btn-bodyparts" onclick="tap2();showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-vehicles" onclick="tap2();showScreen('vehicles');startVehicles()"><span class="icon">🚗</span><span class="lbl">Vehicle Sounds</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
@@ -305,6 +320,20 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
   <div class="bp-character" id="bp-character">🧔</div>
   <div class="bp-grid" id="bp-grid"></div>
   <div class="bp-hint" id="bp-hint">Tap the right part on you!</div>
+</div>
+
+<!-- VEHICLE SOUNDS -->
+<div id="vehicles" class="screen">
+  <button class="back-btn" onclick="goHome()">🏠</button>
+  <div class="score-display">⭐ <span id="vh-score">0</span></div>
+  <div class="vh-prompt" id="vh-prompt">Listen and tap the right vehicle!</div>
+  <div class="vh-round" id="vh-round">Round 1 / 8</div>
+  <button class="vh-sound-btn" id="vh-sound-btn" onclick="playVehicleSound()">
+    <div class="vh-icon" id="vh-target-icon">🔊</div>
+    <div class="vh-label" id="vh-sound-label">Tap to hear!</div>
+  </button>
+  <div class="vh-grid" id="vh-grid"></div>
+  <div class="vh-hint" id="vh-hint">Press the button to hear the sound!</div>
 </div>
 
 <!-- CHALISA HOME -->
@@ -430,6 +459,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
         <div class="ps-card"><div class="pse">🌟</div><div class="psn">Shapes</div><div class="psv" id="ps-shapes">0</div></div>
         <div class="ps-card"><div class="pse">🧠</div><div class="psn">Memory</div><div class="psv" id="ps-memory">0</div></div>
         <div class="ps-card"><div class="pse">🧍</div><div class="psn">Body Parts</div><div class="psv" id="ps-bodyparts">0/8</div></div>
+        <div class="ps-card"><div class="pse">🚗</div><div class="psn">Vehicles</div><div class="psv" id="ps-vehicles">0/8</div></div>
         <div class="ps-card"><div class="pse">🕊️</div><div class="psn">Chalisa</div><div class="psv" id="ps-chalisa">0/27</div></div>
       </div>
     </div>
@@ -602,8 +632,19 @@ const BODY_PARTS = [
   {emoji:'🗣️',name:'Head',hindi:'&#x0938;&#x093F;&#x0930;'}
 ];
 
+const VEHICLES = [
+  {emoji:'🚗',name:'Car',sound:'car',desc:'Vroom vroom!'},
+  {emoji:'🚕',name:'Taxi',sound:'taxi',desc:'Beep beep!'},
+  {emoji:'🏍️',name:'Bike',sound:'bike',desc:'Neeeen!'},
+  {emoji:'🚂',name:'Train',sound:'train',desc:'Toot toot!'},
+  {emoji:'✈️',name:'Airplane',sound:'airplane',desc:'Whhooooosh!'},
+  {emoji:'🚁',name:'Helicopter',sound:'helicopter',desc:'Whop whop whop!'},
+  {emoji:'🚢',name:'Ship',sound:'ship',desc:'Honk honk!'},
+  {emoji:'🚒',name:'Fire Truck',sound:'firetruck',desc:'Siral siral!'}
+];
+
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0};
 let soundOn=true, voiceOn=true, hapticOn=true;
 let masteredColors=[];
 let masteredVerses=[];
@@ -676,6 +717,7 @@ function refreshUI(){
   const psh=el('ps-shapes'); if(psh) psh.textContent=S.shapes;
   const pm=el('ps-memory'); if(pm) pm.textContent=S.memory;
   const pbp=el('ps-bodyparts'); if(pbp) pbp.textContent=S.bodyparts+'/8';
+  const pvh=el('ps-vehicles'); if(pvh) pvh.textContent=S.vehicles+'/8';
   const pch=el('ps-chalisa'); if(pch) pch.textContent=masteredVerses.length+'/27';
   const pt=el('ps-total'); if(pt) pt.textContent=ts;
   const cl=el('ch-learned'); if(cl) cl.textContent=masteredVerses.length;
@@ -1144,6 +1186,66 @@ function bodyPartPick(p){
   } else {
     no2();
     el('bp-prompt').textContent='❌ Try: '+bpTarget.emoji+' '+bpTarget.name;
+  }
+}
+
+// === VEHICLE SOUNDS ===
+let vhRound=0, vhScore=0, vhTarget=null, vhPool=[];
+
+function startVehicles(){
+  vhRound=0;vhScore=0;
+  el('vh-score').textContent='0';
+  nextVHRound();
+}
+function nextVHRound(){
+  if(vhRound>=8){
+    showWin('Vehicle Expert!','You know all the vehicle sounds!','🚗');
+    S.vehicles=8;saveState();
+    setTimeout(()=>{goHome();},2000);
+    return;
+  }
+  vhPool=[...VEHICLES].sort(()=>Math.random()-0.5).slice(0,4);
+  vhTarget=vhPool[Math.floor(Math.random()*vhPool.length)];
+  el('vh-prompt').textContent='Which vehicle makes this sound?';
+  el('vh-round').textContent='Round '+(vhRound+1)+' / 8';
+  el('vh-sound-label').textContent='Tap to hear!';
+  el('vh-target-icon').textContent='🔊';
+  el('vh-hint').textContent='Press the button to hear the sound!';
+  const grid=el('vh-grid');grid.innerHTML='';
+  vhPool.forEach(v=>{
+    const btn=document.createElement('button');
+    btn.className='vh-btn';
+    btn.innerHTML='<div class="vhemoji">'+v.emoji+'</div><div class="vhname">'+v.name+'</div>';
+    btn.onclick=()=>vehiclePick(v);
+    grid.appendChild(btn);
+  });
+}
+function playVehicleSound(){
+  if(!vhTarget) return;
+  haptic();pop();
+  el('vh-target-icon').textContent=vhTarget.emoji;
+  el('vh-sound-label').textContent=vhTarget.name+': '+vhTarget.desc;
+  el('vh-hint').textContent='Now tap the right vehicle!';
+  // Use Web Speech to describe the vehicle sound
+  try{
+    const utt=new SpeechSynthesisUtterance(vhTarget.name+' says: '+vhTarget.desc);
+    utt.rate=0.85;utt.pitch=1.1;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utt);
+  }catch(e){}
+}
+function vehiclePick(v){
+  haptic();pop();
+  if(v.name===vhTarget.name){
+    ok();vhScore++;
+    el('vh-prompt').textContent='✅ Correct! '+vhTarget.emoji+' goes '+vhTarget.desc;
+    vhRound++;
+    showScore('⭐');
+    S.vehicles=Math.max(S.vehicles,vhRound);saveState();
+    setTimeout(nextVHRound,1000);
+  } else {
+    no2();
+    el('vh-prompt').textContent='❌ That\'s a '+v.emoji+' '+v.name+'. Try again!';
   }
 }
 
