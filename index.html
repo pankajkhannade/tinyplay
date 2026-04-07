@@ -569,13 +569,26 @@ const CELEBS_HINDI = ['&#x092C;&#x0939;&#x0941;&#x0924; &#x0905;&#x091A;&#x094D;
 const TRY_HINDI = ['&#x0915;&#x094B;&#x0908; &#x092C;&#x093E;&#x0924; &#x0928;&#x093F;&#x0935;&#x0947;&#x0938;!','&#x0926;&#x0941;&#x092C;&#x093E;&#x0930;&#x093E; try &#x0915;&#x0930;&#x094B;!','&#x0924;&#x0941;&#x092E; &#x0915;&#x0930; &#x0938;&#x0915;&#x0924;&#x0947; &#x0939;&#x094B;!','&#x092B;&#x093F;&#x0930; &#x0938;&#x0947; &#x0915;&#x094B;&#x0936;&#x093F;&#x0936; &#x0915;&#x0930;&#x094B;!'];
 
 const ANIMALS = [
-  {emoji:'🐮',name:'Cow'},{emoji:'🐪',name:'Camel'},{emoji:'🐫',name:'Horse'},
-  {emoji:'🐘',name:'Elephant'},{emoji:'🐨',name:'Koala'},{emoji:'🐼',name:'Panda'},
-  {emoji:'🐨',name:'Bear'},{emoji:'🦁',name:'Lion'},{emoji:'🐶',name:'Dog'},
-  {emoji:'🦁',name:'Tiger'},{emoji:'🦋',name:'Butterfly'},{emoji:'🐤',name:'Baby Chick'},
-  {emoji:'🐦',name:'Bird'},{emoji:'🐢',name:'Turtle'},{emoji:'🦊',name:'Fox'},
-  {emoji:'🐹',name:'Hamster'},{emoji:'🐰',name:'Rabbit'},{emoji:'🦌',name:'Deer'},
-  {emoji:'🐻',name:'Bear'},{emoji:'🐷',name:'Pig'}
+  {emoji:'🐮',name:'Cow',fact:'Cows have 4 stomachs! They chew cud all day.'},
+  {emoji:'🐪',name:'Camel',fact:'Camels store fat in their humps — not water!'},
+  {emoji:'🐫',name:'Horse',fact:'Horses can sleep standing up!'},
+  {emoji:'🐘',name:'Elephant',fact:'Elephants can\'t jump but they can swim!'},
+  {emoji:'🐨',name:'Koala',fact:'Koalas sleep up to 22 hours a day!'},
+  {emoji:'🐼',name:'Panda',fact:'Giant pandas eat bamboo all day long!'},
+  {emoji:'🐻',name:'Bear',fact:'Bears can run as fast as a car!'},
+  {emoji:'🦁',name:'Lion',fact:'Lions are the only cats that live in groups!'},
+  {emoji:'🐶',name:'Dog',fact:'Dogs can understand up to 250 words!'},
+  {emoji:'🐯',name:'Tiger',fact:'No two tigers have the same stripes!'},
+  {emoji:'🦋',name:'Butterfly',fact:'Butterflies taste with their feet!'},
+  {emoji:'🐤',name:'Chick',fact:'Baby chicks can recognise their mum\'s voice!'},
+  {emoji:'🐦',name:'Bird',fact:'Birds have hollow bones to help them fly!'},
+  {emoji:'🐢',name:'Turtle',fact:'Some turtles can live over 100 years!'},
+  {emoji:'🦊',name:'Fox',fact:'Foxes have amazing hearing — they hear low sounds underground!'},
+  {emoji:'🐹',name:'Hamster',fact:'Hamsters can stuff food equal to 20% of their body weight in their cheeks!'},
+  {emoji:'🐰',name:'Rabbit',fact:'A rabbit\'s teeth never stop growing!'},
+  {emoji:'🦌',name:'Deer',fact:'Baby deer are called fawns and can stand within minutes of being born!'},
+  {emoji:'🐷',name:'Pig',fact:'Pigs are smarter than dogs and love to play!'},
+  {emoji:'🐧',name:'Penguin',fact:'Penguins slide on their tummies to move fast on ice!'}
 ];
 
 const BC = ['#FF1493','#FF6347','#FFD700','#00CED1','#9370DB','#FF69B4','#FF4500','#32CD32','#FF6B6B','#00BFFF'];
@@ -944,10 +957,11 @@ function animalPick(a){
   haptic();pop();
   if(a.name===aTarget.name){
     ok();aScore++;
-    el('a-target').textContent='✅ Correct!';
+    const fact = a.fact || '';
+    el('a-target').innerHTML='✅ Correct! ' + fact;
     aRound++;
     showScore('⭐');
-    setTimeout(nextAnimalRound,900);
+    setTimeout(nextAnimalRound,1400);
   } else {
     no2();
     el('a-target').textContent='❌ Try: '+aTarget.emoji;
