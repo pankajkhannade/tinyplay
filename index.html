@@ -52,6 +52,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-shapes{background:linear-gradient(135deg,#E91E63,#9C27B0,#673AB7)}
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
+#btn-colormix{background:linear-gradient(135deg,#FF6B6B,#FF8E53)}
 #btn-bodyparts{background:linear-gradient(135deg,#FF6B6B,#00D4AA)}
 #btn-vehicles{background:linear-gradient(135deg,#1565C0,#1976D2,#42A5F5)}
 
@@ -222,6 +223,23 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #counting{background:linear-gradient(135deg,#2196F3,#21CBF3)}
 #shapes{background:linear-gradient(135deg,#9b27B0,#e91e63)}
 #memory{background:linear-gradient(135deg,#F37335,#FDC830)}
+#colormix{background:linear-gradient(135deg,#667eea,#764ba2)}
+.mix-slots{display:flex;gap:16px;align-items:center;margin-top:20px}
+.mix-slot{width:80px;height:80px;border-radius:20px;border:4px dashed rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:2rem;transition:all 0.3s}
+.mix-slot.filled{border-style:solid;border-color:white;background:rgba(255,255,255,0.2)}
+.mix-plus{font-size:2rem;color:rgba(255,255,255,0.7);font-weight:900}
+.mix-equals{font-size:2rem;color:rgba(255,255,255,0.7);margin:0 10px}
+.mix-result{width:80px;height:80px;border-radius:20px;border:4px solid white;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:rgba(255,255,255,0.15);transition:all 0.4s}
+.mix-result.show{border-color:#FFEE00;transform:scale(1.15);box-shadow:0 0 20px rgba(255,238,0,0.6)}
+.mix-colors{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap;justify-content:center;max-width:340px}
+.mix-color-btn{width:90px;height:90px;border-radius:50%;border:5px solid white;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 0 rgba(0,0,0,0.15);transition:transform 0.1s;font-family:inherit;font-size:2.5rem}
+.mix-color-btn:active{transform:scale(0.94) translateY(3px)}
+.mix-color-btn.used{opacity:0.35;pointer-events:none}
+.mix-label{font-size:0.65rem;color:white;font-weight:700;margin-top:2px}
+.mix-prompt{position:absolute;top:60px;font-size:1.1rem;color:rgba(255,255,255,0.9);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,0.2);text-align:center;width:100%;padding:0 20px}
+.mix-round-info{position:absolute;top:95px;font-size:0.9rem;color:rgba(255,255,255,0.7)}
+.mix-hint{position:absolute;bottom:130px;font-size:0.95rem;color:rgba(255,255,255,0.8);text-align:center}
+@keyframes mixPop{0%{transform:scale(0.5);opacity:0}60%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
@@ -243,6 +261,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-memory" onclick="tap2();showScreen('memory');startMemory()"><span class="icon">🧠</span><span class="lbl">Memory</span><span class="age">3+</span></button>
       <button class="game-btn" id="btn-bodyparts" onclick="tap2();showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-vehicles" onclick="tap2();showScreen('vehicles');startVehicles()"><span class="icon">🚗</span><span class="lbl">Vehicle Sounds</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-colormix" onclick="tap2();showScreen('colormix');startColorMix()"><span class="icon">🎨</span><span class="lbl">Color Mix!</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
@@ -309,6 +328,23 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
   <div class="score-display">⭐ <span id="m-score">0</span></div>
   <div class="round-info-center" id="m-progress">Round 1 / 6</div>
   <div class="m-grid" id="m-grid"></div>
+</div>
+
+<!-- COLOR MIXING -->
+<div id="colormix" class="screen">
+  <button class="back-btn" onclick="goHome()">🏠</button>
+  <div class="score-display">⭐ <span id="mx-score">0</span></div>
+  <div class="mix-prompt" id="mx-prompt">Mix the colors!</div>
+  <div class="mix-round-info" id="mx-round">Round 1 / 8</div>
+  <div class="mix-slots" id="mx-slots">
+    <div class="mix-slot" id="mx-slot1">❓</div>
+    <div class="mix-plus">+</div>
+    <div class="mix-slot" id="mx-slot2">❓</div>
+    <div class="mix-equals">=</div>
+    <div class="mix-result" id="mx-result">?</div>
+  </div>
+  <div class="mix-colors" id="mx-colors"></div>
+  <div class="mix-hint" id="mx-hint">Tap two colors to mix them!</div>
 </div>
 
 <!-- BODY PARTS -->
@@ -461,6 +497,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
         <div class="ps-card"><div class="pse">🧍</div><div class="psn">Body Parts</div><div class="psv" id="ps-bodyparts">0/8</div></div>
         <div class="ps-card"><div class="pse">🚗</div><div class="psn">Vehicles</div><div class="psv" id="ps-vehicles">0/8</div></div>
         <div class="ps-card"><div class="pse">🕊️</div><div class="psn">Chalisa</div><div class="psv" id="ps-chalisa">0/27</div></div>
+        <div class="ps-card"><div class="pse">🧪</div><div class="psn">Color Mix</div><div class="psv" id="ps-mix">0/8</div></div>
       </div>
     </div>
     <div class="ps-total-card" style="margin-top:8px">
@@ -613,6 +650,12 @@ const SHAPES = [
   {name:'Diamond',emoji:'💎'}
 ];
 
+const COLOR_MIX = [
+  {c1:{color:'#FF4444',emoji:'🔴',name:'RED'},c2:{color:'#4488FF',emoji:'🔵',name:'BLUE'},result:{color:'#9B27B0',emoji:'🟣',name:'PURPLE'}},
+  {c1:{color:'#FF4444',emoji:'🔴',name:'RED'},c2:{color:'#FFDD00',emoji:'🟡',name:'YELLOW'},result:{color:'#FF8800',emoji:'🟠',name:'ORANGE'}},
+  {c1:{color:'#4488FF',emoji:'🔵',name:'BLUE'},c2:{color:'#FFDD00',emoji:'🟡',name:'YELLOW'},result:{color:'#44BB44',emoji:'🟢',name:'GREEN'}}
+];
+
 const MEMO = [
   {emoji:'🍎',name:'Apple'},{emoji:'🍫',name:'Chocolate'},
   {emoji:'🥒',name:'Mango'},{emoji:'🍓',name:'Strawberry'},
@@ -631,7 +674,8 @@ const TROPHIES = [
   {id:'memory6',emoji:'🧠',name:'Memory Pro',desc:'Complete 6 memory rounds',check:()=>S.memory>=6},
   {id:'bodyparts8',emoji:'🧍',name:'Body Smart',desc:'Learn all 8 body parts',check:()=>S.bodyparts>=8},
   {id:'chalisa10',emoji:'🕊️',name:'Chalisa Learner',desc:'Learn 10 verses',check:()=>masteredVerses.length>=10},
-  {id:'chalisa23',emoji:'🙏',name:'Hanuman Devotee',desc:'Learn all 27 verses',check:()=>masteredVerses.length>=27}
+  {id:'chalisa23',emoji:'🙏',name:'Hanuman Devotee',desc:'Learn all 27 verses',check:()=>masteredVerses.length>=27},
+  {id:'mixround8',emoji:'🧪',name:'Mix Master',desc:'Complete 8 color mixing rounds',check:()=>S.mixround>=8}
 ];
 
 const BODY_PARTS = [
@@ -657,7 +701,7 @@ const VEHICLES = [
 ];
 
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0};
 let soundOn=true, voiceOn=true, hapticOn=true;
 let masteredColors=[];
 let masteredVerses=[];
@@ -681,6 +725,9 @@ let shRound=0, shScore=0, shTarget=null;
 // Memory
 let mRound=0, mScore=0, mFlipped=[], mMatched=0, mLocked=false;
 
+// Color Mix
+let mxRound=0, mxScore=0, mxSelected=[], mxTarget=null, mxOptions=[];
+
 // Body Parts
 let bpRound=0, bpScore=0, bpPool=[], bpTarget=null;
 
@@ -690,7 +737,7 @@ let cfIdx=0, cfPlaying=false, cfTimer=null;
 
 // === HELPERS ===
 const el=(id)=>document.getElementById(id);
-const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory;
+const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory+S.mixround;
 
 function saveState(){
   localStorage.setItem('tp',JSON.stringify(S));
@@ -711,6 +758,7 @@ function loadState(){
     if(d.shapes!==undefined) S.shapes=d.shapes;
     if(d.memory!==undefined) S.memory=d.memory;
     if(d.bodyparts!==undefined) S.bodyparts=d.bodyparts;
+    if(d.mixround!==undefined) S.mixround=d.mixround;
     masteredColors=JSON.parse(localStorage.getItem('tp_colors')||'[]');
     masteredVerses=JSON.parse(localStorage.getItem('tp_verses')||'[]');
     soundOn=localStorage.getItem('tp_sound')!=='0';
@@ -732,6 +780,7 @@ function refreshUI(){
   const pbp=el('ps-bodyparts'); if(pbp) pbp.textContent=S.bodyparts+'/8';
   const pvh=el('ps-vehicles'); if(pvh) pvh.textContent=S.vehicles+'/8';
   const pch=el('ps-chalisa'); if(pch) pch.textContent=masteredVerses.length+'/27';
+  const pmx=el('ps-mix'); if(pmx) pmx.textContent=S.mixround+'/8';
   const pt=el('ps-total'); if(pt) pt.textContent=ts;
   const cl=el('ch-learned'); if(cl) cl.textContent=masteredVerses.length;
   const ct=el('ch-total'); if(ct) ct.textContent=masteredVerses.length+'/27';
@@ -1159,6 +1208,82 @@ function flipCard(card,emoji){
 function pairs_count(){
   // Each memory round has exactly 2 pairs (4 cards)
   return 2;
+}
+
+// === COLOR MIX ===
+function startColorMix(){
+  mxRound=0;mxScore=0;mxSelected=[];
+  el('mx-score').textContent='0';
+  nextMixRound();
+}
+function nextMixRound(){
+  if(mxRound>=8){
+    showWin('Mix Master!','You discovered all the color secrets!','🧪');
+    S.mixround=8;saveState();
+    setTimeout(()=>{goHome();},2200);
+    return;
+  }
+  mxSelected=[];
+  // Pick a random mix combo
+  const combo=COLOR_MIX[Math.floor(Math.random()*COLOR_MIX.length)];
+  mxTarget=combo;
+  // Build 3 options: the 2 correct colors + 1 distractor
+  const distractor=COLOR_MIX.filter(m=>m!==combo)[Math.floor(Math.random()*(COLOR_MIX.length-1))].c1;
+  mxOptions=[combo.c1,combo.c2,distractor].sort(()=>Math.random()-0.5);
+  el('mx-prompt').textContent='What does '+combo.c1.name+' + '+combo.c2.name+' make?';
+  el('mx-round').textContent='Round '+(mxRound+1)+' / 8';
+  el('mx-slot1').innerHTML='❓';el('mx-slot1').className='mix-slot';
+  el('mx-slot2').innerHTML='❓';el('mx-slot2').className='mix-slot';
+  el('mx-result').className='mix-result';el('mx-result').textContent='?';
+  const grid=el('mx-colors');grid.innerHTML='';
+  mxOptions.forEach((c,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='mix-color-btn';
+    btn.style.background=c.color;
+    btn.innerHTML=c.emoji+'<div class="mix-label">'+c.name+'</div>';
+    btn.onclick=()=>selectMixColor(c,idx,btn);
+    grid.appendChild(btn);
+  });
+}
+function selectMixColor(c,idx,btn){
+  if(mxSelected.find(s=>s.idx===idx)) return;
+  haptic();tap2();
+  mxSelected.push({...c,idx});
+  btn.classList.add('used');
+  // Fill slot
+  const slot=mxSelected.length===1 ? el('mx-slot1') : el('mx-slot2');
+  slot.innerHTML=c.emoji;slot.className='mix-slot filled';
+  if(mxSelected.length===2){
+    // Check if correct
+    const [a,b]=mxSelected;
+    const correct=(a.name===mxTarget.c1.name&&b.name===mxTarget.c2.name)||
+                  (a.name===mxTarget.c2.name&&b.name===mxTarget.c1.name);
+    setTimeout(()=>{
+      if(correct){
+        ok();mxScore++;mxRound++;S.mixround=Math.max(S.mixround,mxRound);saveState();
+        el('mx-score').textContent=mxScore;
+        showScore('⭐');
+        // Show result
+        const res=mxTarget.result;
+        const rEl=el('mx-result');
+        rEl.style.background=res.color;
+        rEl.textContent=res.emoji+' '+res.name;
+        rEl.className='mix-result show';
+        el('mx-prompt').textContent='WOW! '+mxTarget.c1.name+'+'+mxTarget.c2.name+'='+res.name+'!';
+        win2();launchConfetti();
+        setTimeout(nextMixRound,2000);
+      } else {
+        no2();
+        el('mx-prompt').textContent='Try again! Pick two colors to mix!';
+        // Reset
+        mxSelected=[];
+        el('mx-slot1').innerHTML='❓';el('mx-slot1').className='mix-slot';
+        el('mx-slot2').innerHTML='❓';el('mx-slot2').className='mix-slot';
+        el('mx-result').className='mix-result';el('mx-result').textContent='?';
+        document.querySelectorAll('.mix-color-btn').forEach(b=>b.classList.remove('used'));
+      }
+    },300);
+  }
 }
 
 // === BODY PARTS ===
