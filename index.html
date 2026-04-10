@@ -53,6 +53,23 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
 #btn-colormix{background:linear-gradient(135deg,#FF6B6B,#FF8E53)}
+#btn-fruits{background:linear-gradient(135deg,#FF6B35,#FF4500)}
+#fruitslice{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
+.fs-area{position:fixed;inset:0;overflow:hidden}
+.fs-prompt{position:absolute;top:60px;font-size:1.1rem;color:rgba(255,255,255,0.9);font-weight:700;text-shadow:1px 1px 0 rgba(0,0,0,0.2);text-align:center;width:100%;padding:0 20px}
+.fs-lives{position:absolute;top:14px;right:16px;display:flex;gap:6px;z-index:10}
+.fs-life{font-size:1.5rem;transition:transform 0.2s}
+.fs-life.lost{opacity:0.25;transform:scale(0.7)}
+.fs-score{position:absolute;top:14px;left:16px;font-size:1.1rem;color:#FFEE00;font-weight:bold;text-shadow:1px 1px 0 rgba(0,0,0,0.3);z-index:10}
+.fs-fruit{position:absolute;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.8rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));transition:transform 0.08s;user-select:none;-webkit-user-select:none}
+.fs-fruit:active{transform:scale(0.88)}
+.fs-halves{position:absolute;pointer-events:none;font-size:2.2rem;font-weight:900;text-shadow:1px 1px 0 rgba(0,0,0,0.2);animation:fsFly 0.5s ease-out forwards}
+@keyframes fsFly{0%{transform:scale(1.2);opacity:1}100%{transform:scale(0.6) translateY(60px) rotate(var(--r,20deg));opacity:0}}
+.fs-juice{position:absolute;border-radius:50%;pointer-events:none;animation:fsJuice 0.4s ease-out forwards}
+@keyframes fsJuice{0%{transform:scale(0);opacity:1}100%{transform:scale(2.5);opacity:0}}
+.fs-miss{position:absolute;font-size:1.4rem;color:#ff4444;font-weight:bold;text-shadow:1px 1px 0 rgba(0,0,0,0.3);animation:fsMiss 0.6s ease-out forwards;pointer-events:none}
+@keyframes fsMiss{0%{transform:scale(1);opacity:1}50%{transform:scale(1.4)}100%{transform:scale(0.8) translateY(-30px);opacity:0}}
+.fs-hint{position:absolute;bottom:110px;font-size:0.95rem;color:rgba(255,255,255,0.7);text-align:center;width:100%}
 #btn-bodyparts{background:linear-gradient(135deg,#FF6B6B,#00D4AA)}
 #btn-vehicles{background:linear-gradient(135deg,#1565C0,#1976D2,#42A5F5)}
 
@@ -262,6 +279,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-bodyparts" onclick="tap2();showScreen('bodyparts');startBodyParts()"><span class="icon">🧍</span><span class="lbl">Body Parts</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-vehicles" onclick="tap2();showScreen('vehicles');startVehicles()"><span class="icon">🚗</span><span class="lbl">Vehicle Sounds</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-colormix" onclick="tap2();showScreen('colormix');startColorMix()"><span class="icon">🎨</span><span class="lbl">Color Mix!</span><span class="age">2.5+</span></button>
+      <button class="game-btn" id="btn-fruits" onclick="tap2();showScreen('fruitslice');startFruitSlice()"><span class="icon">🍎</span><span class="lbl">Fruit Slice</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
     </div>
   </div>
@@ -328,6 +346,16 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
   <div class="score-display">⭐ <span id="m-score">0</span></div>
   <div class="round-info-center" id="m-progress">Round 1 / 6</div>
   <div class="m-grid" id="m-grid"></div>
+</div>
+
+<!-- FRUIT SLICE -->
+<div id="fruitslice" class="screen">
+  <button class="back-btn" onclick="stopFruitSlice();goHome()">🏠</button>
+  <div class="fs-score">🍎 <span id="fs-score">0</span></div>
+  <div class="fs-lives" id="fs-lives"></div>
+  <div class="fs-prompt" id="fs-prompt">Slice the fruits!</div>
+  <div class="fs-area" id="fs-area"></div>
+  <div class="fs-hint" id="fs-hint">Tap fruits before they fall!</div>
 </div>
 
 <!-- COLOR MIXING -->
@@ -498,6 +526,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
         <div class="ps-card"><div class="pse">🚗</div><div class="psn">Vehicles</div><div class="psv" id="ps-vehicles">0/8</div></div>
         <div class="ps-card"><div class="pse">🕊️</div><div class="psn">Chalisa</div><div class="psv" id="ps-chalisa">0/27</div></div>
         <div class="ps-card"><div class="pse">🧪</div><div class="psn">Color Mix</div><div class="psv" id="ps-mix">0/8</div></div>
+        <div class="ps-card"><div class="pse">🍎</div><div class="psn">Fruit Slice</div><div class="psv" id="ps-fruits">0</div></div>
       </div>
     </div>
     <div class="ps-total-card" style="margin-top:8px">
@@ -700,8 +729,21 @@ const VEHICLES = [
   {emoji:'🚒',name:'Fire Truck',sound:'firetruck',desc:'Siral siral!'}
 ];
 
+const FRUITS = [
+  {emoji:'🍎',name:'Apple',color:'#FF6B6B'},
+  {emoji:'🍊',name:'Orange',color:'#FFA500'},
+  {emoji:'🍋',name:'Lemon',color:'#FFD700'},
+  {emoji:'🍇',name:'Grapes',color:'#9B59B6'},
+  {emoji:'🍉',name:'Watermelon',color:'#FF6347'},
+  {emoji:'🍓',name:'Strawberry',color:'#FF4757'},
+  {emoji:'🥝',name:'Kiwi',color:'#7BED9F'},
+  {emoji:'🍑',name:'Peach',color:'#FFB8B8'},
+  {emoji:'🍒',name:'Cherry',color:'#E74C3C'},
+  {emoji:'🥭',name:'Mango',color:'#F39C12'}
+];
+
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0};
 let soundOn=true, voiceOn=true, hapticOn=true;
 let masteredColors=[];
 let masteredVerses=[];
@@ -731,13 +773,16 @@ let mxRound=0, mxScore=0, mxSelected=[], mxTarget=null, mxOptions=[];
 // Body Parts
 let bpRound=0, bpScore=0, bpPool=[], bpTarget=null;
 
+// Fruit Slice
+let fsLives=3, fsScore=0, fsInterval=null, fsRunning=false, fsMissed=0;
+
 // Chalisa
 let chVerseIdx=0, chCurrentMode='';
 let cfIdx=0, cfPlaying=false, cfTimer=null;
 
 // === HELPERS ===
 const el=(id)=>document.getElementById(id);
-const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory+S.mixround;
+const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory+S.mixround+S.fruits;
 
 function saveState(){
   localStorage.setItem('tp',JSON.stringify(S));
@@ -759,6 +804,7 @@ function loadState(){
     if(d.memory!==undefined) S.memory=d.memory;
     if(d.bodyparts!==undefined) S.bodyparts=d.bodyparts;
     if(d.mixround!==undefined) S.mixround=d.mixround;
+    if(d.fruits!==undefined) S.fruits=d.fruits;
     masteredColors=JSON.parse(localStorage.getItem('tp_colors')||'[]');
     masteredVerses=JSON.parse(localStorage.getItem('tp_verses')||'[]');
     soundOn=localStorage.getItem('tp_sound')!=='0';
@@ -779,6 +825,7 @@ function refreshUI(){
   const pm=el('ps-memory'); if(pm) pm.textContent=S.memory;
   const pbp=el('ps-bodyparts'); if(pbp) pbp.textContent=S.bodyparts+'/8';
   const pvh=el('ps-vehicles'); if(pvh) pvh.textContent=S.vehicles+'/8';
+  const pfr=el('ps-fruits'); if(pfr) pfr.textContent=S.fruits;
   const pch=el('ps-chalisa'); if(pch) pch.textContent=masteredVerses.length+'/27';
   const pmx=el('ps-mix'); if(pmx) pmx.textContent=S.mixround+'/8';
   const pt=el('ps-total'); if(pt) pt.textContent=ts;
@@ -1286,6 +1333,119 @@ function selectMixColor(c,idx,btn){
   }
 }
 
+// === FRUIT SLICE ===
+function startFruitSlice(){
+  fsLives=3; fsScore=0; fsMissed=0; fsRunning=true;
+  el('fs-score').textContent='0';
+  el('fs-area').innerHTML='';
+  el('fs-prompt').textContent='Slice the fruits!';
+  el('fs-hint').textContent='Tap fruits before they fall!';
+  renderFsLives();
+  if(fsInterval) clearInterval(fsInterval);
+  fsInterval=setInterval(fsSpawn,900);
+}
+function stopFruitSlice(){
+  fsRunning=false;
+  if(fsInterval){ clearInterval(fsInterval); fsInterval=null; }
+}
+function renderFsLives(){
+  const container=el('fs-lives');
+  if(!container) return;
+  container.innerHTML='';
+  for(let i=0;i<3;i++){
+    const h=document.createElement('span');
+    h.className='fs-life'+(i>=fsLives?' lost':'');
+    h.textContent='❤️';
+    container.appendChild(h);
+  }
+}
+function fsSpawn(){
+  if(!fsRunning) return;
+  const area=el('fs-area');
+  const fr=FRUITS[Math.floor(Math.random()*FRUITS.length)];
+  const sz=55+Math.random()*25;
+  const x=10+Math.random()*(window.innerWidth-sz-20);
+  const f=document.createElement('div');
+  f.className='fs-fruit';
+  f.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+x+'px;top:-'+sz+'px;font-size:'+(sz*0.7)+'px';
+  f.textContent=fr.emoji;
+  f.dataset.color=fr.color;
+  f.onclick=(e)=>{
+    if(!fsRunning || f.dataset.sliced) return;
+    f.dataset.sliced='1';
+    fsScore++;
+    el('fs-score').textContent=fsScore;
+    const rect=f.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+    // Juice splash
+    for(let j=0;j<4;j++){
+      const juice=document.createElement('div');
+      juice.className='fs-juice';
+      juice.style.cssText='width:12px;height:12px;background:'+fr.color+';left:'+(cx+((Math.random()-0.5)*30))+'px;top:'+(cy+((Math.random()-0.5)*30))+'px';
+      document.body.appendChild(juice);
+      setTimeout(()=>juice.remove(),400);
+    }
+    // Half emojis fly out
+    const h1=document.createElement('div');
+    h1.className='fs-halves';
+    h1.style.cssText='left:'+(cx-15)+'px;top:'+(cy-15)+'px;--r:-25deg;color:'+fr.color;
+    h1.textContent=fr.emoji+'⟩';
+    document.body.appendChild(h1);
+    const h2=document.createElement('div');
+    h2.className='fs-halves';
+    h2.style.cssText='left:'+(cx+5)+'px;top:'+(cy-15)+'px;--r:25deg;color:'+fr.color;
+    h2.textContent='⟨'+fr.emoji;
+    document.body.appendChild(h2);
+    setTimeout(()=>{h1.remove();h2.remove();},500);
+    tone(600+Math.random()*300,0.12,0.2);
+    showScore('🍎');
+    f.style.opacity='0';
+    setTimeout(()=>f.remove(),100);
+    if(fsScore>0 && fsScore%10===0){
+      S.fruits=Math.max(S.fruits,fsScore);
+      saveState();
+    }
+    if(fsScore>=20){
+      stopFruitSlice();
+      setTimeout(()=>{
+        showWin('Fruit Master!','You sliced '+fsScore+' fruits!','🍎');
+        S.fruits=Math.max(S.fruits,fsScore);
+        saveState();
+      },300);
+    }
+  };
+  area.appendChild(f);
+  // Fall animation
+  let fy=-sz;
+  const fall=setInterval(()=>{
+    if(!fsRunning){ clearInterval(fall); return; }
+    fy+=2.2; f.style.top=fy+'px';
+    if(fy>window.innerHeight){
+      clearInterval(fall);
+      if(f.dataset.sliced) return;
+      fsMissed++;
+      fsLives=Math.max(0,fsLives-1);
+      renderFsLives();
+      tone(200,0.2,0.3);
+      // Miss indicator
+      const miss=document.createElement('div');
+      miss.className='fs-miss';
+      miss.style.cssText='left:'+(parseFloat(f.style.left))+'px;top:'+(window.innerHeight-60)+'px';
+      miss.textContent='💔';
+      area.appendChild(miss);
+      setTimeout(()=>miss.remove(),600);
+      f.remove();
+      if(fsLives<=0){
+        stopFruitSlice();
+        setTimeout(()=>{
+          showWin('So Close!','You sliced '+fsScore+' fruits. Try again!','🍊');
+        },300);
+      }
+    }
+  },20);
+}
+
 // === BODY PARTS ===
 function startBodyParts(){
   bpRound=0;bpScore=0;
@@ -1665,7 +1825,7 @@ function toggleVoice(){voiceOn=!voiceOn;haptic();saveState();refreshUI();}
 function toggleHaptic(){hapticOn=!hapticOn;haptic();saveState();refreshUI();}
 function resetProgress(){
   if(confirm('Reset all progress? This cannot be undone.')){
-    S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0};
+    S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,fruits:0};
     masteredColors=[];masteredVerses=[];
     localStorage.removeItem('tp');localStorage.removeItem('tp_colors');localStorage.removeItem('tp_verses');
     refreshUI();showMsg('Progress reset');
