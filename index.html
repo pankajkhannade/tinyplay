@@ -187,6 +187,26 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 /* Trophies */
 #trophies{background:linear-gradient(135deg,#FFF9E6,#FFF3E0)}
+/* Parent Voice Recording */
+.rec-section{margin-top:8px}
+.rec-card{background:white;border-radius:16px;padding:14px;margin:8px 0;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+.rec-card .rc-title{font-size:0.85rem;font-weight:700;color:#333;margin-bottom:4px}
+.rec-row{display:flex;gap:10px;align-items:center}
+.rec-game{font-size:0.8rem;color:#666;min-width:100px}
+.rec-status{font-size:0.8rem;color:#888}
+.rec-status.done{color:#00D4AA;font-weight:700}
+.rec-btn-small{background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:white;border:none;border-radius:14px;padding:8px 16px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;transition:transform 0.1s}
+.rec-btn-small:active{transform:scale(0.94)}
+.rec-btn-small.record{background:linear-gradient(135deg,#FF4500,#FF6B00)}
+.rec-btn-small.stop{background:#999}
+.recording-indicator{display:flex;align-items:center;gap:8px;padding:8px 0}
+.rec-dot{width:14px;height:14px;border-radius:50%;background:#ff4444;animation:recPulse 0.8s ease-in-out infinite}
+@keyframes recPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+.rec-waves{display:flex;gap:3px;align-items:center;height:20px}
+.rec-wave{width:3px;background:#ff4444;border-radius:2px;animation:waveAnim 0.5s ease-in-out infinite alternate}
+@keyframes waveAnim{0%{height:4px}100%{height:16px}}
+.rec-play-btn{background:#00D4AA;color:white;border:none;border-radius:12px;padding:6px 12px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;margin-left:auto}
+.rec-play-btn:active{transform:scale(0.94)}
 .trophies-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;max-width:360px;width:100%}
 .trophy-card{background:white;border-radius:20px;padding:16px;text-align:center;box-shadow:0 3px 8px rgba(0,0,0,0.1)}
 .trophy-card .temoji{font-size:2.5rem}.trophy-card .tname{font-size:0.85rem;font-weight:800;color:#333;margin-top:4px}.trophy-card .tdesc{font-size:0.72rem;color:#888;margin-top:2px}
@@ -531,6 +551,51 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
     </div>
     <div class="ps-total-card" style="margin-top:8px">
       <div class="pst-e">⭐</div><div class="pst-l">Total Stars Earned</div><div class="pst-v" id="ps-total">0</div>
+    </div>
+    <div class="rec-section">
+      <div style="font-size:0.9rem;font-weight:800;color:#333;margin-bottom:8px;text-align:center">🎙️ Record Your Voice</div>
+      <div class="rec-card">
+        <div class="rc-title">Colors</div>
+        <div class="rec-row">
+          <div class="rec-game">"Find RED!"</div>
+          <div class="rec-status" id="rec-status-colors">Not recorded</div>
+          <button class="rec-btn-small record" id="rec-btn-colors" onclick="toggleRec('colors')">Record</button>
+        </div>
+        <div class="recording-indicator" id="rec-ind-colors" style="display:none">
+          <div class="rec-dot"></div>
+          <div class="rec-waves"><div class="rec-wave" style="animation-delay:0s"></div><div class="rec-wave" style="animation-delay:0.1s"></div><div class="rec-wave" style="animation-delay:0.2s"></div></div>
+          <span style="font-size:0.75rem;color:#ff4444;font-weight:700">Recording...</span>
+        </div>
+        <div id="rec-play-colors"></div>
+      </div>
+      <div class="rec-card">
+        <div class="rc-title">Animals</div>
+        <div class="rec-row">
+          <div class="rec-game">"Find the Cow!"</div>
+          <div class="rec-status" id="rec-status-animals">Not recorded</div>
+          <button class="rec-btn-small record" id="rec-btn-animals" onclick="toggleRec('animals')">Record</button>
+        </div>
+        <div class="recording-indicator" id="rec-ind-animals" style="display:none">
+          <div class="rec-dot"></div>
+          <div class="rec-waves"><div class="rec-wave" style="animation-delay:0s"></div><div class="rec-wave" style="animation-delay:0.1s"></div><div class="rec-wave" style="animation-delay:0.2s"></div></div>
+          <span style="font-size:0.75rem;color:#ff4444;font-weight:700">Recording...</span>
+        </div>
+        <div id="rec-play-animals"></div>
+      </div>
+      <div class="rec-card">
+        <div class="rc-title">Shapes</div>
+        <div class="rec-row">
+          <div class="rec-game">"Find the Circle!"</div>
+          <div class="rec-status" id="rec-status-shapes">Not recorded</div>
+          <button class="rec-btn-small record" id="rec-btn-shapes" onclick="toggleRec('shapes')">Record</button>
+        </div>
+        <div class="recording-indicator" id="rec-ind-shapes" style="display:none">
+          <div class="rec-dot"></div>
+          <div class="rec-waves"><div class="rec-wave" style="animation-delay:0s"></div><div class="rec-wave" style="animation-delay:0.1s"></div><div class="rec-wave" style="animation-delay:0.2s"></div></div>
+          <span style="font-size:0.75rem;color:#ff4444;font-weight:700">Recording...</span>
+        </div>
+        <div id="rec-play-shapes"></div>
+      </div>
     </div>
     <div style="text-align:center;margin-top:8px">
       <button class="ch-btn" onclick="showAvatarPicker()" style="background:#6B5BFF;box-shadow:0 5px 0 #4a3db8;font-size:0.9rem;padding:10px 24px;margin-bottom:6px">🎭 Change Avatar</button>
@@ -892,7 +957,8 @@ function showScore(txt){
   d.style.top='40%';document.body.appendChild(d);
   setTimeout(()=>d.remove(),1000);
 }
-function showMsg(msg){
+function showMsg(msg, key){
+  if(key && playVoice(key)) return;
   const d=document.createElement('div');d.className='popup-msg';d.textContent=msg;
   d.style.top='30%';document.body.appendChild(d);
   setTimeout(()=>d.remove(),1500);
@@ -1010,6 +1076,7 @@ function clTap(){
     card.style.background='rgb('+r+','+g+','+b2+')';
     el('cl-hint').textContent=c.name+'!';
     showScore('⭐');
+    playVoice('colors');
     const celeb=CELEBS_HINDI[Math.floor(Math.random()*CELEBS_HINDI.length)];
     el('celebArea').innerHTML='<div class="popup-msg" style="position:static;transform:none;animation:none;opacity:1;background:rgba(0,0,0,0.5)">'+celeb+'</div>';
     setTimeout(()=>{ el('celebArea').innerHTML=''; },1200);
@@ -1055,6 +1122,7 @@ function animalPick(a){
     ok();aScore++;
     const fact = a.fact || '';
     el('a-target').innerHTML='✅ Correct! ' + fact;
+    playVoice('animals');
     aRound++;
     showScore('⭐');
     setTimeout(nextAnimalRound,1400);
@@ -1191,6 +1259,7 @@ function shapePick(s){
     ok();shScore++;shRound++;S.shapes=Math.max(S.shapes,shRound);saveState();
     el('sh-score').textContent=shScore;
     showScore('⭐');
+    playVoice('shapes');
     setTimeout(nextShapeRound,800);
   } else {
     no2();
@@ -1823,6 +1892,94 @@ function renderTrophies(){
 function toggleSound(){soundOn=!soundOn;haptic();saveState();refreshUI();}
 function toggleVoice(){voiceOn=!voiceOn;haptic();saveState();refreshUI();}
 function toggleHaptic(){hapticOn=!hapticOn;haptic();saveState();refreshUI();}
+
+// === PARENT VOICE RECORDING ===
+let mediaRec = null;
+let recChunks = [];
+let curRecKey = null;
+
+function toggleRec(key){
+  if(mediaRec && mediaRec.state === 'recording'){
+    stopRec(key);
+  } else {
+    startRec(key);
+  }
+}
+
+function startRec(key){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showMsg('Recording not supported here');
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    curRecKey = key;
+    recChunks = [];
+    mediaRec = new MediaRecorder(stream);
+    mediaRec.ondataavailable = e=>{ if(e.data.size>0) recChunks.push(e.data); };
+    mediaRec.onstop = ()=>{
+      const blob = new Blob(recChunks, {type:'audio/webm'});
+      const reader = new FileReader();
+      reader.onloadend = ()=>{
+        const b64 = reader.result;
+        const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
+        stored[key] = b64;
+        localStorage.setItem('tp_voice', JSON.stringify(stored));
+        stream.getTracks().forEach(t=>t.stop());
+        refreshRecUI(key);
+        showMsg('Voice saved! 🎙️');
+      };
+      reader.readAsDataURL(blob);
+    };
+    mediaRec.start();
+    refreshRecUI(key);
+  }).catch(e=>{ showMsg('Mic permission denied'); });
+}
+
+function stopRec(key){
+  if(mediaRec && mediaRec.state==='recording'){
+    mediaRec.stop();
+  }
+}
+
+function refreshRecUI(key){
+  const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
+  const has = !!stored[key];
+  el('rec-status-'+key).textContent = has ? '✅ Saved' : 'Not recorded';
+  el('rec-status-'+key).className = has ? 'rec-status done' : 'rec-status';
+  el('rec-btn-'+key).textContent = has ? 'Re-record' : 'Record';
+  const ind = el('rec-ind-'+key);
+  ind.style.display = (mediaRec && mediaRec.state==='recording' && curRecKey===key) ? 'flex' : 'none';
+  const pb = el('rec-play-'+key);
+  pb.innerHTML = '';
+  if(has && stored[key]){
+    const btn = document.createElement('button');
+    btn.className = 'rec-play-btn';
+    btn.textContent = '▶ Play';
+    btn.onclick = ()=>{
+      const a = new Audio(stored[key]);
+      a.play();
+    };
+    pb.appendChild(btn);
+  }
+}
+
+function hasVoice(key){
+  const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
+  return !!stored[key];
+}
+
+function playVoice(key){
+  const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
+  if(stored[key]){
+    const a = new Audio(stored[key]);
+    a.play();
+    return true;
+  }
+  return false;
+}
+
+// showMsg now supports optional voice key (line 981)
+
 function resetProgress(){
   if(confirm('Reset all progress? This cannot be undone.')){
     S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,fruits:0};
