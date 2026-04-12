@@ -52,6 +52,30 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-shapes{background:linear-gradient(135deg,#E91E63,#9C27B0,#673AB7)}
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
+#btn-bedtime{background:linear-gradient(135deg,#1a1a3e,#2d1b69,#1a1a4e)}
+/* Bedtime Stories */
+#bedtime{background:linear-gradient(180deg,#0d0d2b 0%,#1a1a3e 40%,#2d1b69 100%);position:fixed;inset:0;overflow:hidden}
+.stars-layer{position:absolute;inset:0;pointer-events:none}
+.star-dot{position:absolute;background:white;border-radius:50%;animation:twinkle var(--d,2s) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+.bed-title{position:absolute;top:55px;width:100%;text-align:center;font-size:1.2rem;color:rgba(255,255,255,0.9);font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+.bed-story-card{background:rgba(255,255,255,0.12);backdrop-filter:blur(12px);border-radius:28px;border:2px solid rgba(255,255,255,0.2);padding:28px 20px;max-width:340px;width:88%;text-align:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.bed-scene{font-size:4.5rem;margin-bottom:16px;animation:bedFloat 3s ease-in-out infinite}
+@keyframes bedFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bed-story-title{font-size:1.1rem;font-weight:900;color:#FFD700;margin-bottom:14px;text-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.bed-story-text{font-size:1.05rem;color:rgba(255,255,255,0.92);line-height:1.7;margin-bottom:20px}
+.bed-nav{position:absolute;bottom:120px;width:100%;display:flex;justify-content:center;gap:14px}
+.bed-nav-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);border-radius:50%;width:52px;height:52px;font-size:1.2rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);transition:transform 0.1s;font-family:inherit}
+.bed-nav-btn:active{transform:scale(0.9)}
+.bed-play-btn{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);border-radius:50%;width:60px;height:60px;font-size:1.5rem;cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);transition:transform 0.1s;font-family:inherit}
+.bed-play-btn:active{transform:scale(0.9)}
+.bed-play-btn.speaking{background:rgba(255,200,100,0.3);border-color:rgba(255,200,100,0.5)}
+.bed-dots{position:absolute;bottom:88px;width:100%;display:flex;justify-content:center;gap:8px}
+.bed-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);transition:all 0.3s}
+.bed-dot.active{background:white;transform:scale(1.3)}
+.bed-hint{position:absolute;bottom:46px;font-size:0.8rem;color:rgba(255,255,255,0.5);text-align:center;width:100%}
+.bed-moon{position:absolute;top:18px;right:22px;font-size:2rem;opacity:0.7;animation:moonGlow 4s ease-in-out infinite}
+@keyframes moonGlow{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:0.9;transform:scale(1.1)}}
 #btn-colormix{background:linear-gradient(135deg,#FF6B6B,#FF8E53)}
 #btn-fruits{background:linear-gradient(135deg,#FF6B35,#FF4500)}
 #fruitslice{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
@@ -301,6 +325,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-colormix" onclick="tap2();showScreen('colormix');startColorMix()"><span class="icon">🎨</span><span class="lbl">Color Mix!</span><span class="age">2.5+</span></button>
       <button class="game-btn" id="btn-fruits" onclick="tap2();showScreen('fruitslice');startFruitSlice()"><span class="icon">🍎</span><span class="lbl">Fruit Slice</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
+      <button class="game-btn" id="btn-bedtime" onclick="tap2();showScreen('bedtime');startBedtime()"><span class="icon">🌙</span><span class="lbl">Bedtime Stories</span><span class="age">2+</span></button>
     </div>
   </div>
   <div class="bottom-nav">
@@ -454,6 +479,26 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       </button>
     </div>
   </div>
+</div>
+
+<!-- BEDTIME STORIES -->
+<div id="bedtime" class="screen">
+  <div class="stars-layer" id="starsLayer"></div>
+  <div class="bed-moon">🌙</div>
+  <button class="back-btn" onclick="stopSpeaking();goHome()">🏠</button>
+  <div class="bed-title" id="bed-title">🌙 Bedtime Stories</div>
+  <div class="bed-story-card" id="bed-card">
+    <div class="bed-scene" id="bed-scene">🌙</div>
+    <div class="bed-story-title" id="bed-story-title">The Sleepy Moon</div>
+    <div class="bed-story-text" id="bed-story-text">High up in the dark blue sky, the Moon looks down at all the little children tucked in their warm beds. "Sleep well," whispers the Moon. "I will watch over you through the night."</div>
+  </div>
+  <div class="bed-dots" id="bed-dots"></div>
+  <div class="bed-nav">
+    <button class="bed-nav-btn" id="bed-prev-btn" onclick="bedPrev()">◀️</button>
+    <button class="bed-play-btn" id="bed-play-btn" onclick="bedToggleSpeak()">🔊</button>
+    <button class="bed-nav-btn" id="bed-next-btn" onclick="bedNext()">▶️</button>
+  </div>
+  <div class="bed-hint">Tap 🔊 to hear the story read aloud</div>
 </div>
 
 <!-- CHALISA LEARN -->
@@ -2061,6 +2106,98 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Update chalisa streak display
   updateChalisaStreak();
 });
+
+// === BEDTIME STORIES ===
+const STORIES = [
+  {
+    title: "The Sleepy Moon",
+    scene: "🌙✨",
+    text: "High up in the dark blue sky, the Moon looks down at all the little children tucked in their warm beds. \"Sleep well,\" whispers the Moon. \"I will watch over you through the night.\" The stars twinkle like tiny night-lights. Sweet dreams, little one."
+  },
+  {
+    title: "The Friendly Star",
+    scene: "⭐🌟",
+    text: "Once upon a time, high up in the sky, there was a little Star who felt lonely. Every night she saw children pointing at her and smiling. One night she blinked extra bright, and a little girl waved back! The Star was so happy. Now every night she waits for that little wave."
+  },
+  {
+    title: "The Little Bunny",
+    scene: "🐰🌕🦉",
+    text: "Little Bunny couldn't sleep. She hopped and hopped but sleep wouldn't come. A wise old Owl flew down. \"Count the stars,\" said Owl. \"One, two, three...\" By the time Bunny reached ten, her eyes were getting heavy. She yawned a big bunny yawn and fell asleep in her soft burrow."
+  },
+  {
+    title: "The Magic Garden",
+    scene: "🌸🌷🌻",
+    text: "In a magic garden, the flowers never closed their petals. But as the sun went to sleep, the flowers began to yawn too. The roses said goodnight first. Then the tulips. Then the little daisies. Soon the whole garden was fast asleep, waiting for the morning sun to wake them up."
+  },
+  {
+    title: "The Train to Dreamland",
+    scene: "🚂🌙💤",
+    text: "All aboard the Dreamland Express! The train choo-choos softly through the night sky. Passengers include teddy bears and little stars. The engine hums a lullaby. The seats are made of softest clouds. Close your eyes... the train is taking you to the most beautiful dreams. All aboard!"
+  }
+];
+let bedIdx = 0;
+let bedSpeaking = false;
+
+function startBedtime(){
+  stopSpeaking();
+  bedIdx = 0;
+  renderBedDots();
+  renderBedStory();
+  buildStars();
+}
+
+function buildStars(){
+  const layer = el('starsLayer');
+  if(layer.children.length) return;
+  for(let i=0;i<40;i++){
+    const d = document.createElement('div');
+    d.className='star-dot';
+    d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*60}%;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;--d:${1+Math.random()*3}s;animation-delay:${Math.random()*3}s`;
+    layer.appendChild(d);
+  }
+}
+
+function renderBedDots(){
+  const d = el('bed-dots');
+  d.innerHTML='';
+  STORIES.forEach((_,i)=>{
+    const dot = document.createElement('div');
+    dot.className='bed-dot'+(i===bedIdx?' active':'');
+    dot.onclick=()=>{bedIdx=i;renderBedStory();renderBedDots();};
+    d.appendChild(dot);
+  });
+}
+
+function renderBedStory(){
+  const s = STORIES[bedIdx];
+  el('bed-scene').textContent = s.scene;
+  el('bed-story-title').textContent = s.title;
+  el('bed-story-text').textContent = s.text;
+  el('bed-prev-btn').style.opacity = bedIdx===0?'0.3':'1';
+  el('bed-next-btn').style.opacity = bedIdx===STORIES.length-1?'0.3':'1';
+}
+
+function bedPrev(){if(bedIdx>0){bedIdx--;renderBedStory();renderBedDots();stopSpeaking();}}
+function bedNext(){if(bedIdx<STORIES.length-1){bedIdx++;renderBedStory();renderBedDots();stopSpeaking();}}
+
+function bedToggleSpeak(){
+  if(bedSpeaking){stopSpeaking();bedSpeaking=false;el('bed-play-btn').classList.remove('speaking');el('bed-play-btn').textContent='🔊';return;}
+  stopSpeaking();
+  const s = STORIES[bedIdx];
+  const utt = new SpeechSynthesisUtterance(s.text);
+  utt.rate = 0.82;
+  utt.pitch = 1.05;
+  utt.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v=>v.lang.startsWith('en')&&!v.name.includes('Google'))||voices.find(v=>v.lang.startsWith('en'));
+  if(preferred) utt.voice = preferred;
+  utt.onend = ()=>{bedSpeaking=false;el('bed-play-btn').classList.remove('speaking');el('bed-play-btn').textContent='🔊';};
+  utt.onerror = ()=>{bedSpeaking=false;el('bed-play-btn').classList.remove('speaking');el('bed-play-btn').textContent='🔊';};
+  window.speechSynthesis.speak(utt);
+  bedSpeaking=true;
+  el('bed-play-btn').classList.add('speaking');
+  el('bed-play-btn').textContent='🔇';
+}
 </script>
 </body>
 </html>
