@@ -53,6 +53,23 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 #btn-memory{background:linear-gradient(135deg,#FF9800,#FFB300,#8BC34A)}
 #btn-chalisa{background:linear-gradient(135deg,#FF8F00,#E65100,#BF360C)}
 #btn-bedtime{background:linear-gradient(135deg,#1a1a3e,#2d1b69,#1a1a4e)}
+#btn-puzzle{background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFEE00)}
+/* Puzzle */
+#puzzle{background:linear-gradient(135deg,#667eea,#764ba2)}
+.pz-area{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pz-target-wrap{position:relative;width:160px;height:160px;margin-top:10px}
+.pz-target{font-size:6rem;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.25));animation:bounce 2s ease-in-out infinite}
+.pz-slots{display:flex;gap:14px;margin-top:24px}
+.pz-slot{width:80px;height:80px;border-radius:18px;border:4px dashed rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:2.5rem;transition:all 0.3s;background:rgba(255,255,255,0.08)}
+.pz-slot.filled{border-style:solid;border-color:#FFEE00;background:rgba(255,238,0,0.15);animation:mixPop 0.4s ease-out}
+.pz-hint{position:absolute;bottom:130px;font-size:0.95rem;color:rgba(255,255,255,0.8);text-align:center}
+.pz-wrong{animation:wiggle 0.3s ease!important}
+@keyframes wiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pz-pieces{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center;max-width:340px}
+.pz-piece{width:90px;height:90px;border-radius:50%;border:5px solid white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2.8rem;box-shadow:0 5px 0 rgba(0,0,0,0.15);transition:transform 0.1s;background:rgba(255,255,255,0.2);animation:bounce 2s ease-in-out infinite}
+.pz-piece:active{transform:scale(0.88)}
+.pz-piece.correct{border-color:#FFEE00;background:rgba(255,238,0,0.3)}
+.pz-piece.locked{opacity:0.3;pointer-events:none}
 /* Bedtime Stories */
 #bedtime{background:linear-gradient(180deg,#0d0d2b 0%,#1a1a3e 40%,#2d1b69 100%);position:fixed;inset:0;overflow:hidden}
 .stars-layer{position:absolute;inset:0;pointer-events:none}
@@ -336,6 +353,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
       <button class="game-btn" id="btn-fruits" onclick="tap2();showScreen('fruitslice');startFruitSlice()"><span class="icon">🍎</span><span class="lbl">Fruit Slice</span><span class="age">2+</span></button>
       <button class="game-btn" id="btn-chalisa" onclick="tap2();showScreen('chalisa-home')"><span class="icon">🙏</span><span class="lbl">Hanuman Chalisa</span><span class="age">Parent+Child</span></button>
       <button class="game-btn" id="btn-bedtime" onclick="tap2();showScreen('bedtime');startBedtime()"><span class="icon">🌙</span><span class="lbl">Bedtime Stories</span><span class="age">2+</span></button>
+      <button class="game-btn" id="btn-puzzle" onclick="tap2();showScreen('puzzle');startPuzzle()"><span class="icon">🧩</span><span class="lbl">Puzzle!</span><span class="age">2.5+</span></button>
     </div>
   </div>
   <div class="bottom-nav">
@@ -679,6 +697,22 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
     <div class="fc-fact" id="fc-fact">Cows have 4 stomachs! They chew cud all day.</div>
     <button class="fc-continue" onclick="dismissFact()">Awesome! 👏</button>
   </div>
+</div>
+
+<!-- PUZZLE -->
+<div id="puzzle" class="screen">
+  <button class="back-btn" onclick="goHome()">🏠</button>
+  <div class="score-display">⭐ <span id="pz-score">0</span></div>
+  <div class="learn-mode-label" id="pz-prompt">Find the right piece!</div>
+  <div class="round-info-center" id="pz-progress">Puzzle 1 / 8</div>
+  <div class="pz-area">
+    <div class="pz-target-wrap">
+      <div class="pz-target" id="pz-target">🍎</div>
+    </div>
+    <div class="pz-slots" id="pz-slots"></div>
+    <div class="pz-pieces" id="pz-pieces"></div>
+  </div>
+  <div class="pz-hint" id="pz-hint">Tap the matching piece!</div>
 </div>
 
 <!-- Win overlay (dynamically shown) -->
@@ -2164,6 +2198,82 @@ const STORIES = [
     text: "All aboard the Dreamland Express! The train choo-choos softly through the night sky. Passengers include teddy bears and little stars. The engine hums a lullaby. The seats are made of softest clouds. Close your eyes... the train is taking you to the most beautiful dreams. All aboard!"
   }
 ];
+
+const PUZZLES = [
+  {emoji:'🍎',pieces:['🍎','🍊','🍋'],name:'Apple'},
+  {emoji:'🐶',pieces:['🐱','🐶','🐰'],name:'Dog'},
+  {emoji:'🚗',pieces:['🚌','✈️','🚗'],name:'Car'},
+  {emoji:'🌟',pieces:['🌙','☀️','🌟'],name:'Star'},
+  {emoji:'🐟',pieces:['🐟','🦋','🐦'],name:'Fish'},
+  {emoji:'🌳',pieces:['🌲','🌸','🌳'],name:'Tree'},
+  {emoji:'🌙',pieces:['⭐','☁️','🌙'],name:'Moon'},
+  {emoji:'🏠',pieces:['🏫','🏥','🏠'],name:'House'}
+];
+let pzIdx=0, pzScore=0, pzPlaced=0;
+
+function startPuzzle(){
+  pzIdx=0; pzScore=0; pzPlaced=0;
+  el('pz-score').textContent='0';
+  renderPuzzleRound();
+}
+
+function renderPuzzleRound(){
+  const pz=PUZZLES[pzIdx];
+  el('pz-target').textContent=pz.emoji;
+  el('pz-progress').textContent='Puzzle '+(pzIdx+1)+' / '+PUZZLES.length;
+  el('pz-prompt').textContent='Find the right piece!';
+  // Render 3 slots
+  el('pz-slots').innerHTML='';
+  for(let i=0;i<3;i++){
+    const s=document.createElement('div');
+    s.className='pz-slot';
+    s.id='pz-slot'+i;
+    el('pz-slots').appendChild(s);
+  }
+  // Shuffle pieces
+  const shuffled=[...pz.pieces].sort(()=>Math.random()-0.5);
+  pzPlaced=0;
+  el('pz-pieces').innerHTML='';
+  shuffled.forEach((piece,pi)=>{
+    const btn=document.createElement('div');
+    btn.className='pz-piece';
+    btn.id='pz-piece'+pi;
+    btn.textContent=piece;
+    btn.onclick=()=>pzTapPiece(pi,piece,pz.pieces[0]);
+    el('pz-pieces').appendChild(btn);
+  });
+}
+
+function pzTapPiece(pi,piece,correct){
+  if(piece===correct){
+    // Place it in next empty slot
+    const slot=el('pz-slot'+pzPlaced);
+    if(slot){slot.textContent=piece;slot.classList.add('filled');}
+    el('pz-piece'+pi).classList.add('locked');
+    pzPlaced++;
+    showStar(window.innerWidth/2, window.innerHeight/2);
+    pzScore++;
+    el('pz-score').textContent=pzScore;
+    if(pzPlaced>=3){
+      // Round complete!
+      showMsg('🎉 Great job!');
+      setTimeout(()=>{
+        pzIdx++;
+        if(pzIdx>=PUZZLES.length){
+          showWin('Puzzle Champion! 🧩','You solved all '+PUZZLES.length+' puzzles! ⭐'+(pzScore>0?' +'+pzScore:''),'🧩');
+        } else {
+          renderPuzzleRound();
+        }
+      },1200);
+    }
+  } else {
+    // Wrong tap - wiggle
+    const btn=el('pz-piece'+pi);
+    btn.classList.add('pz-wrong');
+    setTimeout(()=>btn.classList.remove('pz-wrong'),300);
+  }
+}
+
 let bedIdx = 0;
 let bedSpeaking = false;
 
