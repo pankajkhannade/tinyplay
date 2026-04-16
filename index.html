@@ -1242,6 +1242,25 @@ function nextAnimalRound(){
     grid.appendChild(btn);
   });
 }
+function showMilestone(round){
+  const msgs={
+    5:{text:'Halfway! 🌟','sub':'Keep going, you\'re doing great!'},
+    10:{text:'Super Star! ⭐','sub':'You\'re on fire! 10 animals found!'},
+    15:{text:'Almost There! 🔥','sub':'Only 5 more to be an Animal Expert!'}
+  };
+  const m=msgs[round];if(!m)return;
+  const overlay=document.createElement('div');
+  overlay.style='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:180;pointer-events:none;animation:fadeIn 0.2s';
+  const icon=(round===5?'🌟':round===10?'⭐':'🔥');
+  const html='<div style="background:white;border-radius:28px;padding:28px 24px;text-align:center;animation:winPop 0.4s;max-width:260px;box-shadow:0 8px 32px rgba(0,0,0,0.3);border:4px solid #FFD700;font-family:Nunito,sans-serif">'+
+    '<div style="font-size:3.5rem;margin-bottom:8px;animation:bounce 1s ease infinite">'+icon+'</div>'+
+    '<div style="font-size:1.5rem;font-weight:900;color:#FF6B00;margin-bottom:6px">'+m.text+'</div>'+
+    '<div style="font-size:0.9rem;color:#666">'+m.sub+'</div></div>';
+  overlay.innerHTML=html;
+  document.body.appendChild(overlay);
+  triggerConfetti(35);
+  setTimeout(()=>{if(overlay.parentNode)overlay.remove();},2000);
+}
 function animalPick(a){
   haptic();pop();
   if(a.name===aTarget.name){
@@ -1250,6 +1269,7 @@ function animalPick(a){
     el('a-target').textContent='✅ Correct!';
     playVoice('animals');
     aRound++;
+    if(aRound===5||aRound===10||aRound===15) showMilestone(aRound);
     showScore('⭐');
     // Show beautiful fact popup
     el('fc-emoji').textContent = a.emoji;
