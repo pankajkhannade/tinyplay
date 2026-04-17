@@ -891,7 +891,13 @@ const TROPHIES = [
   {id:'bodyparts8',emoji:'🧍',name:'Body Smart',desc:'Learn all 8 body parts',check:()=>S.bodyparts>=8},
   {id:'chalisa10',emoji:'🕊️',name:'Chalisa Learner',desc:'Learn 10 verses',check:()=>masteredVerses.length>=10},
   {id:'chalisa23',emoji:'🙏',name:'Hanuman Devotee',desc:'Learn all 27 verses',check:()=>masteredVerses.length>=27},
-  {id:'mixround8',emoji:'🧪',name:'Mix Master',desc:'Complete 8 color mixing rounds',check:()=>S.mixround>=8}
+  {id:'mixround8',emoji:'🧪',name:'Mix Master',desc:'Complete 8 color mixing rounds',check:()=>S.mixround>=8},
+  {id:'firstplay',emoji:'🍼',name:'First Play',desc:'Played your first game!',check:()=>S.firstPlay},
+  {id:'fruit25',emoji:'🍎',name:'Fruit Slicer',desc:'Slice 25 fruits',check:()=>S.fruits>=25},
+  {id:'fruit50',emoji:'🍉',name:'Juicy Master',desc:'Slice 50 fruits',check:()=>S.fruits>=50},
+  {id:'vehicles4',emoji:'🚗',name:'Vehicle Explorer',desc:'Explore 4 vehicle sounds',check:()=>S.vehicles>=4},
+  {id:'counting4',emoji:'🔢',name:'Counter Star',desc:'Complete 4 counting rounds',check:()=>S.counting>=4},
+  {id:'memory3',emoji:'🧠',name:'Memory Rookie',desc:'Complete 3 memory rounds',check:()=>S.memory>=3}
 ];
 
 const BODY_PARTS = [
@@ -930,7 +936,7 @@ const FRUITS = [
 ];
 
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0,firstPlay:false};
 let soundOn=true, voiceOn=true, hapticOn=true, nightMode=false;
 let masteredColors=[];
 let masteredVerses=[];
@@ -1033,6 +1039,9 @@ function refreshUI(){
 }
 
 function showScreen(id){
+  if(!S.firstPlay&&['colorlearn','animals','balloonpop','counting','shapes','memory','colormix','bodyparts','vehicles','fruitslice','puzzle'].includes(id)){
+    S.firstPlay=true; saveState();
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   const s=el(id); if(s) s.classList.add('active');
