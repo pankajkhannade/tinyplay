@@ -975,7 +975,7 @@ let cfIdx=0, cfPlaying=false, cfTimer=null;
 
 // === HELPERS ===
 const el=(id)=>document.getElementById(id);
-const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory+S.mixround+S.fruits;
+const totalStars=()=>S.colors+S.balloons+S.animals+S.counting+S.shapes+S.memory+S.bodyparts+S.vehicles+S.mixround+S.fruits;
 
 function saveState(){
   localStorage.setItem('tp',JSON.stringify(S));
@@ -2146,7 +2146,7 @@ function playVoice(key){
 
 function resetProgress(){
   if(confirm('Reset all progress? This cannot be undone.')){
-    S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,fruits:0};
+    S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0,firstPlay:false};
     masteredColors=[];masteredVerses=[];
     localStorage.removeItem('tp');localStorage.removeItem('tp_colors');localStorage.removeItem('tp_verses');
     refreshUI();showMsg('Progress reset');
