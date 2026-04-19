@@ -256,6 +256,7 @@ body{font-family:'Nunito','Comic Sans MS',sans-serif;background:#FFF9E6;min-heig
 .rec-waves{display:flex;gap:3px;align-items:center;height:20px}
 .rec-wave{width:3px;background:#ff4444;border-radius:2px;animation:waveAnim 0.5s ease-in-out infinite alternate}
 @keyframes waveAnim{0%{height:4px}100%{height:16px}}
+.rec-waves{display:flex;gap:3px;align-items:center;height:20px}
 .rec-play-btn{background:#00D4AA;color:white;border:none;border-radius:12px;padding:6px 12px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;margin-left:auto}
 .rec-play-btn:active{transform:scale(0.94)}
 .trophies-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;max-width:360px;width:100%}
@@ -1033,6 +1034,8 @@ function refreshUI(){
   el('toggle-night').className='toggle'+(nightMode?' on':'');
   el('btn-night').style.opacity=nightMode?'1':'0.6';
   el('toggle-voice').className='toggle'+(voiceOn?' on':'');
+  // Refresh voice recording status indicators
+  refreshRecStatuses();
   el('toggle-haptic').className='toggle'+(hapticOn?' on':'');
   // Trophies
   renderTrophies();
@@ -2130,6 +2133,29 @@ function refreshRecUI(key){
 function hasVoice(key){
   const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
   return !!stored[key];
+}
+
+// Update all voice recording status indicators (called on each screen open)
+function refreshRecStatuses(){
+  ['colors','animals','shapes'].forEach(key=>{
+    const has = hasVoice(key);
+    const statusEl = el('rec-status-'+key);
+    const btnEl = el('rec-btn-'+key);
+    if(statusEl){ statusEl.textContent = has ? '✅ Saved' : 'Not recorded'; statusEl.className = has ? 'rec-status done' : 'rec-status'; }
+    if(btnEl){ btnEl.textContent = has ? 'Re-record' : 'Record'; }
+    const pb = el('rec-play-'+key);
+    if(pb){
+      pb.innerHTML = '';
+      const stored = JSON.parse(localStorage.getItem('tp_voice')||'{}');
+      if(has && stored[key]){
+        const btn = document.createElement('button');
+        btn.className = 'rec-play-btn';
+        btn.textContent = '▶ Play';
+        btn.onclick = ()=>{ new Audio(stored[key]).play(); };
+        pb.appendChild(btn);
+      }
+    }
+  });
 }
 
 function playVoice(key){
