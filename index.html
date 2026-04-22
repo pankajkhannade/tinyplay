@@ -1054,6 +1054,7 @@ function showScreen(id){
     if(b.textContent==='⚙️'&&id==='parent') b.classList.add('active');
   });
   prev=id;
+  if(id==='parent') { refreshRecStatuses(); refreshUI(); }
 }
 
 function goHome(){ stopSpeaking(); stopBalloons(); stopAnimals(); el('fact-popup').classList.remove('show'); showScreen('home'); }
