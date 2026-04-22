@@ -937,7 +937,7 @@ const FRUITS = [
 ];
 
 // === STATE ===
-let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0,bedtime:0,firstPlay:false};
+let S={colors:0,balloons:0,animals:0,counting:0,shapes:0,memory:0,bodyparts:0,vehicles:0,mixround:0,fruits:0,firstPlay:false};
 let soundOn=true, voiceOn=true, hapticOn=true, nightMode=false;
 let masteredColors=[];
 let masteredVerses=[];
@@ -1000,7 +1000,6 @@ function loadState(){
     if(d.bodyparts!==undefined) S.bodyparts=d.bodyparts;
     if(d.mixround!==undefined) S.mixround=d.mixround;
     if(d.fruits!==undefined) S.fruits=d.fruits;
-    if(d.bedtime!==undefined) S.bedtime=d.bedtime;
     masteredColors=JSON.parse(localStorage.getItem('tp_colors')||'[]');
     masteredVerses=JSON.parse(localStorage.getItem('tp_verses')||'[]');
     soundOn=localStorage.getItem('tp_sound')!=='0';
@@ -1023,7 +1022,6 @@ function refreshUI(){
   const pbp=el('ps-bodyparts'); if(pbp) pbp.textContent=S.bodyparts+'/8';
   const pvh=el('ps-vehicles'); if(pvh) pvh.textContent=S.vehicles+'/8';
   const pfr=el('ps-fruits'); if(pfr) pfr.textContent=S.fruits;
-  const pbd=el('ps-bedtime'); if(pbd) pbd.textContent=S.bedtime+'/'+STORIES.length;
   const pch=el('ps-chalisa'); if(pch) pch.textContent=masteredVerses.length+'/27';
   const pmx=el('ps-mix'); if(pmx) pmx.textContent=S.mixround+'/8';
   const pt=el('ps-total'); if(pt) pt.textContent=ts;
@@ -1980,8 +1978,6 @@ function speakHindi(text){
 
 function stopSpeaking(){
   chStopAllAudio();
-  if(bedSpeaking){bedSpeaking=false;try{el('bed-play-btn').classList.remove('speaking');el('bed-play-btn').textContent='\uD83D\uDD14';}catch(e){}}
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
 function loadFullVerse(){
@@ -2404,13 +2400,7 @@ function renderBedStory(){
 }
 
 function bedPrev(){if(bedIdx>0){bedIdx--;renderBedStory();renderBedDots();stopSpeaking();}}
-function bedNext(){
-  if(bedIdx<STORIES.length-1){
-    bedIdx++;
-    if(S.bedtime<bedIdx) S.bedtime=bedIdx;
-    renderBedStory();renderBedDots();stopSpeaking();
-  }
-}
+function bedNext(){if(bedIdx<STORIES.length-1){bedIdx++;renderBedStory();renderBedDots();stopSpeaking();}}
 
 function bedToggleSpeak(){
   if(bedSpeaking){stopSpeaking();bedSpeaking=false;el('bed-play-btn').classList.remove('speaking');el('bed-play-btn').textContent='🔊';return;}
